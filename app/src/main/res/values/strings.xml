@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">GeyserAndroid</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Geyser Android</string>
+    <string name="nav_header_subtitle">geysermc.org</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+
+    <!-- Navigation -->
+    <string name="menu_home">Home</string>
+    <string name="menu_proxy">LAN Proxy</string>
+    <string name="menu_geyser">Geyser</string>
+    <string name="menu_links">Links</string>
+    <string name="menu_website">Website</string>
+    <string name="menu_discord">Discord</string>
+
+    <!-- Proxy Screen -->
+    <string name="proxy_address">Address</string>
+    <string name="proxy_port">Port</string>
+    <string name="proxy_start">Start</string>
+    <string name="proxy_stop">Stop</string>
+    <string name="proxy_logs">Logs</string>
+    <string name="proxy_default_ip">mc.cubecraft.net</string>
+    <string name="proxy_default_port">25565</string>
+
+    <!-- About Screen -->
+    <string name="about_credits_title">Credits</string>
+    <string name="about_licences_title">Licences</string>
+
+    <!-- Settings Screen -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>

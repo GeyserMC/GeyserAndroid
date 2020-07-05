@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "org.geysermc.app.android"
+        minSdkVersion 24
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        //exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
+
+    configurations {
+        all { // You should exclude one of them not both of them
+            //exclude group: "com.nukkitx.fastutil", module: "fastutil-common"
+        }
+    }
+}
+
+repositories {
+    maven {
+        url = uri('https://repo.nukkitx.com/maven-releases/')
+    }
+
+    maven {
+        url = uri('https://repo.nukkitx.com/maven-snapshots/')
+    }
+
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.navigation:navigation-fragment:2.3.0'
+    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.8"
+
+    // this is a mess
+    implementation ("com.nukkitx.protocol:bedrock-v407:2.6.0-SNAPSHOT") {
+        exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
+        exclude group: 'com.nukkitx.fastutil', module:'fastutil-int-common'
+        exclude group: 'com.nukkitx.fastutil', module:'fastutil-long-common'
+        exclude group: 'com.nukkitx.fastutil', module:'fastutil-object-common'
+    }
+
+    implementation ("com.nukkitx.fastutil:fastutil-common:8.3.1")
+
+    /*implementation ("com.nukkitx.fastutil:fastutil-int-common:8.3.1") {
+        exclude group: 'com.nukkitx.fastutil', module: 'fastutil-common'
+    }
+    implementation ("com.nukkitx.fastutil:fastutil-long-common:8.3.1") {
+        exclude group: 'com.nukkitx.fastutil', module: 'fastutil-common'
+    }
+    implementation ("com.nukkitx.fastutil:fastutil-object-common:8.3.1") {
+        exclude group: 'com.nukkitx.fastutil', module: 'fastutil-common'
+    }*/
+
+    //implementation ("com.nukkitx.fastutil:fastutil-int-common:8.3.1")
+    //implementation ("com.nukkitx.fastutil:fastutil-long-common:8.3.1")
+    //implementation ("com.nukkitx.fastutil:fastutil-object-common:8.3.1")
+
+    /*implementation "org.apache.logging.log4j:log4j-core:2.13.3"
+    implementation "org.apache.logging.log4j:log4j-api:2.13.3"*/
+
+}
