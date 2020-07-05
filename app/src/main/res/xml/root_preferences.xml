@@ -1,34 +1,24 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="@string/settings_geyser">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+        <ListPreference
+            app:defaultValue="internal"
+            app:entries="@array/storage_entries"
+            app:entryValues="@array/storage_values"
+            app:key="geyser_storage"
+            app:title="@string/settings_storage"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:defaultValue="master"
+            app:key="geyser_branch"
+            app:title="@string/settings_branch"
             app:useSimpleSummaryProvider="true" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <Preference
+            app:key="branch_refresh"
+            app:title="@string/settings_branch_refresh" />
 
     </PreferenceCategory>
 
