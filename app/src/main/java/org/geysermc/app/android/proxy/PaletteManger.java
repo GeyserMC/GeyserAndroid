@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PalleteManger {
+public class PaletteManger {
 
     public static final NbtList<NbtMap> BLOCK_PALLETE;
     public static final byte[] EMPTY_LEVEL_CHUNK_DATA;

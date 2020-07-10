@@ -108,7 +108,7 @@ public class Player {
         startGamePacket.setEnchantmentSeed(0);
         startGamePacket.setMultiplayerCorrelationId("");
 
-        startGamePacket.setBlockPalette(PalleteManger.BLOCK_PALLETE);
+        startGamePacket.setBlockPalette(PaletteManger.BLOCK_PALLETE);
         startGamePacket.setVanillaVersion("*");
         session.sendPacket(startGamePacket);
 
@@ -117,7 +117,7 @@ public class Player {
         data.setChunkX(0);
         data.setChunkZ(0);
         data.setSubChunksLength(0);
-        data.setData(PalleteManger.EMPTY_LEVEL_CHUNK_DATA);
+        data.setData(PaletteManger.EMPTY_LEVEL_CHUNK_DATA);
         data.setCachingEnabled(false);
         session.sendPacket(data);
 

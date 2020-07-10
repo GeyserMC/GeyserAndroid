@@ -70,7 +70,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.8"
 
     // this is a mess
-    implementation ("com.nukkitx.protocol:bedrock-v407:2.6.0-SNAPSHOT") {
+    implementation ("com.nukkitx.protocol:bedrock-v407:2.6.0-SNAPSHOT")/* {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-int-common'
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-long-common'

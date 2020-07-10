@@ -9,6 +9,7 @@ import android.view.Menu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.nukkitx.protocol.bedrock.v407.Bedrock_v407;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        System.out.println(Bedrock_v407.V407_CODEC.getMinecraftVersion());
+        System.out.println(Bedrock_v407.V407_CODEC.getProtocolVersion());
     }
 
     @Override
