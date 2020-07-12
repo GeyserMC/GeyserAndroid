@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.anarres.jarjar'
 
 android {
     compileSdkVersion 28
@@ -29,12 +30,6 @@ android {
         //exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
-    }
-
-    configurations {
-        all { // You should exclude one of them not both of them
-            //exclude group: "com.nukkitx.fastutil", module: "fastutil-common"
-        }
     }
 }
 
@@ -69,31 +64,24 @@ dependencies {
 
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.8"
 
-    // this is a mess
-    implementation ("com.nukkitx.protocol:bedrock-v407:2.6.0-SNAPSHOT")/* {
+    implementation ("com.nukkitx.protocol:bedrock-v407:2.6.0-SNAPSHOT") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
-        exclude group: 'com.nukkitx.fastutil', module:'fastutil-int-common'
-        exclude group: 'com.nukkitx.fastutil', module:'fastutil-long-common'
-        exclude group: 'com.nukkitx.fastutil', module:'fastutil-object-common'
     }
 
-    implementation ("com.nukkitx.fastutil:fastutil-common:8.3.1")
+    // Remove the duplicate classes and include fastutil-common
+    implementation jarjar.repackage {
+        from 'com.nukkitx.fastutil:fastutil-common:8.3.1'
 
-    /*implementation ("com.nukkitx.fastutil:fastutil-int-common:8.3.1") {
-        exclude group: 'com.nukkitx.fastutil', module: 'fastutil-common'
+        classDelete "it.unimi.dsi.fastutil.ints.IntIterator"
+        classDelete "it.unimi.dsi.fastutil.longs.LongIterator"
+        classDelete "it.unimi.dsi.fastutil.objects.ObjectIterator"
     }
-    implementation ("com.nukkitx.fastutil:fastutil-long-common:8.3.1") {
-        exclude group: 'com.nukkitx.fastutil', module: 'fastutil-common'
-    }
-    implementation ("com.nukkitx.fastutil:fastutil-object-common:8.3.1") {
-        exclude group: 'com.nukkitx.fastutil', module: 'fastutil-common'
-    }*/
-
-    //implementation ("com.nukkitx.fastutil:fastutil-int-common:8.3.1")
-    //implementation ("com.nukkitx.fastutil:fastutil-long-common:8.3.1")
-    //implementation ("com.nukkitx.fastutil:fastutil-object-common:8.3.1")
 
     /*implementation "org.apache.logging.log4j:log4j-core:2.13.3"
     implementation "org.apache.logging.log4j:log4j-api:2.13.3"*/
+
+    //implementation 'io.netty:netty-buffer:4.1.25.Final'
+    //implementation 'io.netty:netty-handler:4.1.25.Final'
+    //implementation 'io.netty:netty-all:4.1.51.Final'
 
 }
