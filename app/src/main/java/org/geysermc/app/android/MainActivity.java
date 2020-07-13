@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        System.out.println(Bedrock_v407.V407_CODEC.getMinecraftVersion());
-        System.out.println(Bedrock_v407.V407_CODEC.getProtocolVersion());
+        // Disable epoll kqueue from loading
+        System.getProperties().put("disableNativeEventLoop", "disableNativeEventLoop");
     }
 
     @Override
