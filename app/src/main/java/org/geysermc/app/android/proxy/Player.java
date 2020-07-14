@@ -123,7 +123,7 @@ public class Player {
 
         // Send the biomes
         BiomeDefinitionListPacket biomeDefinitionListPacket = new BiomeDefinitionListPacket();
-        biomeDefinitionListPacket.setDefinitions(NbtMap.EMPTY);
+        biomeDefinitionListPacket.setDefinitions(PaletteManger.BIOMES_PALLETE);
         session.sendPacket(biomeDefinitionListPacket);
 
         // Let the client know the player can spawn

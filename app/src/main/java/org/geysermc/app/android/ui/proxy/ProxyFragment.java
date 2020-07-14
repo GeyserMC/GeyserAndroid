@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.geysermc.app.android.R;
+import org.geysermc.app.android.proxy.Logger;
 import org.geysermc.app.android.proxy.ProxyServer;
+
+import java.util.Timer;
 
 public class ProxyFragment extends Fragment {
 
@@ -22,6 +25,8 @@ public class ProxyFragment extends Fragment {
     private TextView txtAddress;
     private TextView txtPort;
     private Button btnStartStop;
+    private TextView txtLogs;
+    private Thread logUpdater;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_proxy, container, false);
@@ -30,6 +35,7 @@ public class ProxyFragment extends Fragment {
         txtAddress = root.findViewById(R.id.txtAddress);
         txtPort = root.findViewById(R.id.txtPort);
         btnStartStop = root.findViewById(R.id.btnStartStop);
+        txtLogs = root.findViewById(R.id.txtLogs);
 
         if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
             ProxyServer proxyServer = ProxyServer.getInstance();
@@ -74,6 +80,27 @@ public class ProxyFragment extends Fragment {
                 txtPort.setEnabled(false);
             }
         });
+
+        logUpdater = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!logUpdater.isInterrupted()) {
+                        Thread.sleep(1000);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txtLogs.setText(Logger.getLog());
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        logUpdater.start();
 
         return root;
     }
