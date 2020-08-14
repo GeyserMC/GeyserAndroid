@@ -68,11 +68,12 @@ dependencies {
 
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.8"
 
-    implementation ("com.nukkitx.protocol:bedrock-v409:2.6.0-SNAPSHOT") {
+    implementation ("com.nukkitx.protocol:bedrock-v408:2.6.0-SNAPSHOT") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'io.netty', module:'netty-transport-native-epoll'
         exclude group: 'io.netty', module:'netty-transport-native-kqueue'
         exclude group: 'com.nukkitx.network'
+        exclude group: 'com.nukkitx', module:'natives'
     }
 
     // Remove the duplicate classes and include fastutil-common
@@ -84,7 +85,7 @@ dependencies {
         classDelete "it.unimi.dsi.fastutil.objects.ObjectIterator"
     }
 
-    implementation 'com.github.rtm516:Network:a8377bbe59'
+    implementation 'com.nukkitx.network:raknet:1.6.20'
 
     /*implementation "org.apache.logging.log4j:log4j-core:2.13.3"
     implementation "org.apache.logging.log4j:log4j-api:2.13.3"*/

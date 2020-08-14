@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.nukkitx.math.vector.Vector2f;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
-import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.data.GamePublishSetting;
 import com.nukkitx.protocol.bedrock.data.GameRuleData;
@@ -108,7 +107,7 @@ public class Player {
         startGamePacket.setEnchantmentSeed(0);
         startGamePacket.setMultiplayerCorrelationId("");
 
-        startGamePacket.setBlockPalette(PaletteManger.BLOCK_PALLETE);
+        startGamePacket.setBlockPalette(PaletteManger.BLOCK_PALETTE);
         startGamePacket.setVanillaVersion("*");
         session.sendPacket(startGamePacket);
 
@@ -123,7 +122,7 @@ public class Player {
 
         // Send the biomes
         BiomeDefinitionListPacket biomeDefinitionListPacket = new BiomeDefinitionListPacket();
-        biomeDefinitionListPacket.setDefinitions(PaletteManger.BIOMES_PALLETE);
+        biomeDefinitionListPacket.setDefinitions(PaletteManger.BIOMES_PALETTE);
         session.sendPacket(biomeDefinitionListPacket);
 
         // Let the client know the player can spawn
@@ -142,6 +141,8 @@ public class Player {
      * Send the player to the another server
      */
     public void connectToServer(String address, int port) {
+        ProxyServer.getInstance().getLogger().info("Sending server transfer packet to " + displayName);
+
         TransferPacket transferPacket = new TransferPacket();
         transferPacket.setAddress(address);
         transferPacket.setPort(port);

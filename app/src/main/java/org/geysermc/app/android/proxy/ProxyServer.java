@@ -27,7 +27,7 @@
 package org.geysermc.app.android.proxy;
 
 import com.nukkitx.protocol.bedrock.*;
-import com.nukkitx.protocol.bedrock.v409.Bedrock_v409;
+import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
 
 import lombok.Getter;
 
@@ -41,7 +41,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class ProxyServer {
 
-    public static final BedrockPacketCodec CODEC = Bedrock_v409.V409_CODEC;
+    public static final BedrockPacketCodec CODEC = Bedrock_v408.V408_CODEC;
 
     private final Timer timer;
     private BedrockServer bdServer;
@@ -81,6 +81,9 @@ public class ProxyServer {
         timer = new Timer();
         TimerTask task = new TimerTask() { public void run() { } };
         timer.scheduleAtFixedRate(task, 0L, 1000L);
+
+        // Initialise the palettes
+        PaletteManger.init();
 
         start(19132);
     }
