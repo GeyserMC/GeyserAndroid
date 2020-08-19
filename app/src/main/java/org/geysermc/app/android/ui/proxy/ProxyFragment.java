@@ -16,8 +16,6 @@ import org.geysermc.app.android.R;
 import org.geysermc.app.android.proxy.Logger;
 import org.geysermc.app.android.proxy.ProxyServer;
 
-import java.util.Timer;
-
 public class ProxyFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
@@ -46,8 +44,8 @@ public class ProxyFragment extends Fragment {
             txtAddress.setEnabled(false);
             txtPort.setEnabled(false);
         } else {
-            txtAddress.setText(sharedPreferences.getString("proxy_address", ""));
-            txtPort.setText(sharedPreferences.getString("proxy_port", "19132"));
+            txtAddress.setText(sharedPreferences.getString("proxy_address", getResources().getString(R.string.proxy_default_ip)));
+            txtPort.setText(sharedPreferences.getString("proxy_port", getResources().getString(R.string.proxy_default_port)));
         }
 
         txtAddress.setOnFocusChangeListener((v, hasFocus) -> {
@@ -81,8 +79,8 @@ public class ProxyFragment extends Fragment {
             }
         });
 
+        // Create a thread that runs every 1s updating the log text
         logUpdater = new Thread() {
-
             @Override
             public void run() {
                 try {
@@ -95,8 +93,7 @@ public class ProxyFragment extends Fragment {
                             }
                         });
                     }
-                } catch (InterruptedException e) {
-                }
+                } catch (InterruptedException | NullPointerException e) { }
             }
         };
 

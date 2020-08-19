@@ -8,6 +8,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import org.geysermc.app.android.R;
+import org.geysermc.app.android.utils.AndroidUtils;
 
 public class AboutFragment extends PreferenceFragmentCompat {
 
@@ -20,20 +21,15 @@ public class AboutFragment extends PreferenceFragmentCompat {
     public boolean onPreferenceTreeClick(Preference preference) {
         switch (preference.getKey()) {
             case "geyser":
-                showURL("https://geysermc.org");
+                AndroidUtils.showURL("https://geysermc.org");
                 return true;
             case "fontawesome":
-                showURL("https://fontawesome.com/license");
+                AndroidUtils.showURL("https://fontawesome.com/license");
                 return true;
             default:
                 break;
         }
 
         return super.onPreferenceTreeClick(preference);
-    }
-
-    private void showURL(String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
     }
 }
