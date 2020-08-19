@@ -3,6 +3,7 @@ package org.geysermc.app.android.ui.proxy;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ public class ProxyFragment extends Fragment {
         txtPort = root.findViewById(R.id.txtPort);
         btnStartStop = root.findViewById(R.id.btnStartStop);
         txtLogs = root.findViewById(R.id.txtLogs);
+
+        txtLogs.setMovementMethod(new ScrollingMovementMethod());
 
         if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
             ProxyServer proxyServer = ProxyServer.getInstance();
@@ -89,7 +92,8 @@ public class ProxyFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                txtLogs.setText(Logger.getLog());
+                                // This should be replace with some form of listener system
+                                txtLogs.append(Logger.getLog().replace(txtLogs.getText(), ""));
                             }
                         });
                     }
