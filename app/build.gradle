@@ -70,9 +70,12 @@ dependencies {
     // Remove epoll, kqueue and fastutil from the protocol
     implementation ("com.nukkitx.protocol:bedrock-v408:2.6.0-SNAPSHOT") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
+        exclude group: 'com.nukkitx.network', module:'common'
         exclude group: 'io.netty', module:'netty-transport-native-epoll'
         exclude group: 'io.netty', module:'netty-transport-native-kqueue'
     }
+
+    implementation 'com.nukkitx.network:common:1.6.20'
 
     // Remove the duplicate classes and include fastutil-common
     implementation jarjar.repackage {
