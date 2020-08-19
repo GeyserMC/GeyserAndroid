@@ -25,6 +25,12 @@
     <string name="proxy_default_ip">test.geysermc.org</string>
     <string name="proxy_default_port">19132</string>
 
+    <!-- Geyser Screen -->
+    <string name="geyser_config">Config</string>
+    <string name="geyser_start">Start</string>
+    <string name="geyser_stop">Stop</string>
+    <string name="geyser_logs">Logs</string>
+
     <!-- About Screen -->
     <string name="about_credits_title">Credits</string>
     <string name="about_licences_title">Licences</string>

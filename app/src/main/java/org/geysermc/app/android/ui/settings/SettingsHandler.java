@@ -1,6 +1,5 @@
 package org.geysermc.app.android.ui.settings;
 
-import android.app.ProgressDialog;
 import android.os.Handler;
 import android.os.Message;
 
