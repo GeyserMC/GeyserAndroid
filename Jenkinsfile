@@ -9,12 +9,18 @@ pipeline {
             steps {
                 sh 'gradle clean assembleRelease'
             }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'app/build/outputs/apk/**/*.apk', fingerprint: true
-                }
-            }
         }
+        stage ('Sign') {
+            steps {
+                signAndroidApks (
+                    apksToSign: '**/*-unsigned.apk',
+                    keyStoreId: 'AndroidKeys',
+                    keyAlias: 'key0',
+                    archiveSignedApks: true,
+                    archiveUnsignedApks: true
+                )
+            }
+        }        
     }
 
     post {
