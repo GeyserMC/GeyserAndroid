@@ -22,8 +22,8 @@
     <string name="proxy_start">Start</string>
     <string name="proxy_stop">Stop</string>
     <string name="proxy_logs">Logs</string>
-    <string name="proxy_default_ip">mc.cubecraft.net</string>
-    <string name="proxy_default_port">25565</string>
+    <string name="proxy_default_ip">test.geysermc.org</string>
+    <string name="proxy_default_port">19132</string>
 
     <!-- About Screen -->
     <string name="about_credits_title">Credits</string>

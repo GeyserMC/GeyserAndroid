@@ -77,8 +77,11 @@ dependencies {
 
     implementation 'com.nukkitx.network:common:1.6.20'
 
+    // Implement the cleaned fastutil manually to prevent the error on release builds
+    implementation files("${buildDir}/jarjar/fastutil-cleaned.jar") { builtBy 'jarjar-repackage_fastutil-cleaned.jar' }
+
     // Remove the duplicate classes and include fastutil-common
-    implementation jarjar.repackage {
+    compileOnly jarjar.repackage('fastutil-cleaned.jar') {
         from 'com.nukkitx.fastutil:fastutil-common:8.3.1'
 
         classDelete "it.unimi.dsi.fastutil.ints.IntIterator"
