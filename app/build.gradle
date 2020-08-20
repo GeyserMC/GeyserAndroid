@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "org.geysermc.app.android"
-        minSdkVersion 24 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
+        minSdkVersion 26 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

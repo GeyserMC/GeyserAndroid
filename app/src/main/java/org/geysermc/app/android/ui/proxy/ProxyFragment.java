@@ -25,7 +25,6 @@ public class ProxyFragment extends Fragment {
     private TextView txtPort;
     private Button btnStartStop;
     private TextView txtLogs;
-    private Thread logUpdater;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_proxy, container, false);
@@ -80,9 +79,7 @@ public class ProxyFragment extends Fragment {
                 txtAddress.setEnabled(true);
                 txtPort.setEnabled(true);
             } else {
-                Runnable runnable = () -> {
-                    new ProxyServer(txtAddress.getText().toString(), Integer.parseInt(txtPort.getText().toString()));
-                };
+                Runnable runnable = () -> new ProxyServer(txtAddress.getText().toString(), Integer.parseInt(txtPort.getText().toString()));
                 Thread thread = new Thread(runnable);
                 thread.start();
 

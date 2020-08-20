@@ -30,6 +30,8 @@
     <string name="geyser_start">Start</string>
     <string name="geyser_stop">Stop</string>
     <string name="geyser_logs">Logs</string>
+    <string name="geyser_command">Command</string>
+    <string name="geyser_not_running">Geyser is not currently running!</string>
 
     <!-- About Screen -->
     <string name="about_credits_title">Credits</string>
