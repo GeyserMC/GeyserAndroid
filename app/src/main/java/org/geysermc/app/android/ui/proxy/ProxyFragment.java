@@ -92,7 +92,7 @@ public class ProxyFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                // This should be replace with some form of listener system
+                                // TODO: This should be replace with some form of listener system
                                 txtLogs.append(Logger.getLog().replace(txtLogs.getText(), ""));
                             }
                         });

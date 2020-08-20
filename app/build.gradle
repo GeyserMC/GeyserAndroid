@@ -20,7 +20,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def newName = outputFileName
+                
+                newName = newName.replace("app-", "${variant.mergedFlavor.applicationId}-")
+                newName = newName.replace("-release", "-${variant.versionName}")
+                newName = newName.replace("-debug", "-${variant.versionName}-debug")
+
+                outputFileName = newName
+            }
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -75,6 +88,7 @@ dependencies {
         exclude group: 'io.netty', module:'netty-transport-native-kqueue'
     }
 
+    // Include the updated common with the android fixes
     implementation 'com.nukkitx.network:common:1.6.20'
 
     // Implement the cleaned fastutil manually to prevent the error on release builds
