@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.geysermc.app.android.R;
-import org.geysermc.app.android.proxy.Logger;
+import org.geysermc.app.android.proxy.ProxyLogger;
 import org.geysermc.app.android.proxy.ProxyServer;
 
 public class ProxyFragment extends Fragment {
@@ -38,6 +38,8 @@ public class ProxyFragment extends Fragment {
 
         txtLogs.setMovementMethod(new ScrollingMovementMethod());
 
+        txtLogs.setText(ProxyLogger.getLog());
+
         if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
             ProxyServer proxyServer = ProxyServer.getInstance();
             txtAddress.setText(proxyServer.getAddress());
@@ -46,6 +48,12 @@ public class ProxyFragment extends Fragment {
 
             txtAddress.setEnabled(false);
             txtPort.setEnabled(false);
+
+            ProxyLogger.setListener(line -> {
+                if (txtLogs != null) {
+                    txtLogs.append(line + "\n");
+                }
+            });
         } else {
             txtAddress.setText(sharedPreferences.getString("proxy_address", getResources().getString(R.string.proxy_default_ip)));
             txtPort.setText(sharedPreferences.getString("proxy_port", getResources().getString(R.string.proxy_default_port)));
@@ -72,36 +80,23 @@ public class ProxyFragment extends Fragment {
                 txtAddress.setEnabled(true);
                 txtPort.setEnabled(true);
             } else {
-                Runnable runnable = () -> new ProxyServer(txtAddress.getText().toString(), Integer.parseInt(txtPort.getText().toString()));
+                Runnable runnable = () -> {
+                    new ProxyServer(txtAddress.getText().toString(), Integer.parseInt(txtPort.getText().toString()));
+                };
                 Thread thread = new Thread(runnable);
                 thread.start();
 
                 self.setText(container.getResources().getString(R.string.proxy_stop));
                 txtAddress.setEnabled(false);
                 txtPort.setEnabled(false);
+
+                ProxyLogger.setListener(line -> {
+                    if (txtLogs != null) {
+                        txtLogs.append(line + "\n");
+                    }
+                });
             }
         });
-
-        // Create a thread that runs every 1s updating the log text
-        logUpdater = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!logUpdater.isInterrupted()) {
-                        Thread.sleep(1000);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // TODO: This should be replace with some form of listener system
-                                txtLogs.append(Logger.getLog().replace(txtLogs.getText(), ""));
-                            }
-                        });
-                    }
-                } catch (InterruptedException | NullPointerException e) { }
-            }
-        };
-
-        logUpdater.start();
 
         return root;
     }

@@ -58,7 +58,7 @@ public class ProxyServer {
     private static ProxyServer instance;
 
     @Getter
-    private final Logger logger;
+    private final ProxyLogger proxyLogger;
 
     @Getter
     private final ScheduledExecutorService generalThreadPool;
@@ -77,7 +77,7 @@ public class ProxyServer {
         this.address = address;
         this.port = port;
 
-        logger = new Logger();
+        proxyLogger = new ProxyLogger();
 
         this.generalThreadPool = Executors.newScheduledThreadPool(32);
 
@@ -93,7 +93,7 @@ public class ProxyServer {
     }
 
     private void start(int port) {
-        logger.info("Starting...");
+        proxyLogger.info("Starting...");
 
         InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", port);
         bdServer = new BedrockServer(bindAddress);
@@ -127,7 +127,7 @@ public class ProxyServer {
 
         // Start server up
         bdServer.bind().join();
-        logger.info("Server started on 0.0.0.0:" + port);
+        proxyLogger.info("Server started on 0.0.0.0:" + port);
     }
 
     public void shutdown() {

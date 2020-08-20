@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.geysermc.app.android.R;
+import org.geysermc.app.android.proxy.ProxyServer;
+import org.geysermc.connector.GeyserConnector;
 
 public class GeyserFragment extends Fragment {
 
@@ -29,6 +31,30 @@ public class GeyserFragment extends Fragment {
         txtLogs = root.findViewById(R.id.txtLogs);
 
         txtLogs.setMovementMethod(new ScrollingMovementMethod());
+
+        if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
+            //ProxyServer proxyServer = ProxyServer.getInstance();
+
+            btnStartStop.setText(container.getResources().getString(R.string.geyser_stop));
+            btnConfig.setEnabled(false);
+        }
+
+        btnStartStop.setOnClickListener(v -> {
+            Button self = (Button) v;
+            if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
+                GeyserConnector.getInstance().shutdown();
+
+                self.setText(container.getResources().getString(R.string.geyser_start));
+                btnConfig.setEnabled(true);
+            } else {
+                /*Runnable runnable = () -> new ProxyServer(txtAddress.getText().toString(), Integer.parseInt(txtPort.getText().toString()));
+                Thread thread = new Thread(runnable);
+                thread.start();*/
+
+                self.setText(container.getResources().getString(R.string.geyser_stop));
+                btnConfig.setEnabled(false);
+            }
+        });
 
         return root;
     }
