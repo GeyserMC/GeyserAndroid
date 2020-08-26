@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.proxy.ProxyLogger;
 import org.geysermc.app.android.proxy.ProxyServer;
+import org.geysermc.app.android.utils.AndroidUtils;
 
 public class ProxyFragment extends Fragment {
 
@@ -50,7 +51,9 @@ public class ProxyFragment extends Fragment {
 
             ProxyLogger.setListener(line -> {
                 if (txtLogs != null) {
-                    txtLogs.append(line + "\n");
+                    getActivity().runOnUiThread(() -> {
+                        txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                    });
                 }
             });
         } else {
@@ -89,7 +92,9 @@ public class ProxyFragment extends Fragment {
 
                 ProxyLogger.setListener(line -> {
                     if (txtLogs != null) {
-                        txtLogs.append(line + "\n");
+                        getActivity().runOnUiThread(() -> {
+                            txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                        });
                     }
                 });
             }

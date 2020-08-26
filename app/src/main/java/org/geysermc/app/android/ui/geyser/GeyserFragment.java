@@ -16,11 +16,9 @@ import androidx.fragment.app.Fragment;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.geyser.GeyserAndroidLogger;
-import org.geysermc.app.android.proxy.ProxyLogger;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 
-import java.io.IOException;
 
 public class GeyserFragment extends Fragment {
 
@@ -50,7 +48,9 @@ public class GeyserFragment extends Fragment {
 
             GeyserAndroidLogger.setListener(line -> {
                 if (txtLogs != null) {
-                    txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                    getActivity().runOnUiThread(() -> {
+                        txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                    });
                 }
             });
         }
@@ -80,7 +80,9 @@ public class GeyserFragment extends Fragment {
 
                 GeyserAndroidLogger.setListener(line -> {
                     if (txtLogs != null) {
-                        txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                        getActivity().runOnUiThread(() -> {
+                            txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                        });
                     }
                 });
             }
