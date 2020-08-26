@@ -20,6 +20,8 @@ import org.geysermc.app.android.proxy.ProxyLogger;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 
+import java.io.IOException;
+
 public class GeyserFragment extends Fragment {
 
     private Button btnConfig;
@@ -86,8 +88,12 @@ public class GeyserFragment extends Fragment {
 
         btnCommand.setOnClickListener(v -> {
             if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
-                ((GeyserAndroidLogger)GeyserConnector.getInstance().getLogger()).runCommand(txtCommand.getText().toString());
-                txtCommand.setText("");
+                try {
+                    ((GeyserAndroidLogger)GeyserConnector.getInstance().getLogger()).runCommand(txtCommand.getText().toString());
+                    txtCommand.setText("");
+                } catch (Exception e) {
+                    AndroidUtils.showToast(getContext(), "Failed to run command!");
+                }
             } else {
                 AndroidUtils.showToast(getContext(), container.getResources().getString(R.string.geyser_not_running));
             }
