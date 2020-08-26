@@ -10,15 +10,15 @@
             app:title="@string/settings_storage"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
+        <!--<ListPreference
             app:defaultValue="master"
             app:key="geyser_branch"
             app:title="@string/settings_branch"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" />-->
 
-        <Preference
+        <!--<Preference
             app:key="branch_refresh"
-            app:title="@string/settings_branch_refresh" />
+            app:title="@string/settings_branch_refresh" />-->
 
     </PreferenceCategory>
 

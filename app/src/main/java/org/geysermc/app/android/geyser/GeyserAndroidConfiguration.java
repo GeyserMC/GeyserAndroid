@@ -26,12 +26,13 @@
 package org.geysermc.app.android.geyser;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+
 import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)

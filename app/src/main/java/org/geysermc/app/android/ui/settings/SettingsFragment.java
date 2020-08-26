@@ -42,8 +42,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        //sharedPreferences.getString("geyser_branch")
 
+        /*
         branchList = (ListPreference) findPreference("geyser_branch");
 
         String storedBranches = sharedPreferences.getString("geyser_branches", "[\"master\"]");
@@ -69,6 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         handler = new SettingsHandler(this);
+        */
     }
 
     private void updateBranches() {

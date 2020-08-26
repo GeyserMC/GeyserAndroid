@@ -15,6 +15,7 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath "com.github.shevek:jarjar:9a7eca72f9"
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
     }
 }
 

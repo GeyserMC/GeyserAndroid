@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.anarres.jarjar'
+apply plugin: "com.github.johnrengelman.shadow"
 
 android {
     compileSdkVersion 28
@@ -7,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "org.geysermc.app.android"
-        minSdkVersion 26 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
+        minSdkVersion 24 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -43,6 +44,10 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
     }
+
+    configurations {
+        nnio
+    }
 }
 
 repositories {
@@ -63,6 +68,13 @@ repositories {
     }
 
     mavenCentral()
+}
+
+task nnioJar (type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    relocate 'org.lukhnos.nnio.file', 'java.nio.file'
+    relocate 'org.lukhnos.nnio.channels', 'java.nio.channels'
+
+    configurations = [project.configurations.nnio]
 }
 
 dependencies {
@@ -111,12 +123,15 @@ dependencies {
         classDelete "it.unimi.dsi.fastutil.floats.FloatIterator"
     }
 
+    // Core Geyser
     implementation ('org.geysermc:connector:1.1.0') {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
-        //exclude group: 'com.nukkitx.protocol', module:'bedrock-v408'
     }
 
-    /*implementation "org.apache.logging.log4j:log4j-core:2.13.3"
-    implementation "org.apache.logging.log4j:log4j-api:2.13.3"*/
+    // Load a remake of nnio to support earlier Android versions
+    nnio 'org.lukhnos:nnio:0.2'
+    implementation tasks.nnioJar.outputs.files
 
+    // slf4j port for Android
+    implementation 'org.slf4j:slf4j-android:1.7.30'
 }

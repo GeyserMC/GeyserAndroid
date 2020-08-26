@@ -25,15 +25,14 @@
 
 package org.geysermc.app.android.geyser;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import org.geysermc.connector.common.ChatColor;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.command.CommandSender;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class GeyserAndroidLogger implements org.geysermc.connector.GeyserLogger, CommandSender {
 
@@ -95,7 +94,9 @@ public class GeyserAndroidLogger implements org.geysermc.connector.GeyserLogger,
 
     @Override
     public void debug(String message) {
-        printConsole("DEBUG - " + message);
+        if (debug) {
+            printConsole("DEBUG - " + message);
+        }
     }
 
     public static void printConsole(String message) {

@@ -25,16 +25,14 @@
 
 package org.geysermc.app.android.geyser;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import android.annotation.SuppressLint;
+import android.content.Context;
 
-import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.command.GeyserCommandManager;
-import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.bootstrap.GeyserBootstrap;
-import org.geysermc.connector.common.PlatformType;
 import org.geysermc.connector.command.CommandManager;
+import org.geysermc.connector.common.PlatformType;
 import org.geysermc.connector.configuration.GeyserConfiguration;
 import org.geysermc.connector.dump.BootstrapDumpInfo;
 import org.geysermc.connector.ping.GeyserLegacyPingPassthrough;
@@ -44,7 +42,6 @@ import org.geysermc.connector.utils.LanguageUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -58,19 +55,25 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
 
     private GeyserConnector connector;
 
-    private String config;
+    private Context ctx;
 
-    public void onEnable(String config) {
-        this.config = config;
+    public void onEnable(Context ctx) {
+        this.ctx = ctx;
         this.onEnable();
     }
 
+    @SuppressLint("NewApi")
     public void onEnable() {
         geyserLogger = new GeyserAndroidLogger();
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-            geyserConfig = objectMapper.readValue(config, GeyserAndroidConfiguration.class);
+            File configFile = FileUtils.fileOrCopiedFromResource(getConfigFolder().resolve("config.yml").toFile(), "config.yml", (x) -> x.replaceAll("generateduuid", UUID.randomUUID().toString()));
+            geyserConfig = FileUtils.loadConfig(configFile, GeyserAndroidConfiguration.class);
+
+            // Set the 'auto' server to the test server
+            if (this.geyserConfig.getRemote().getAddress().equalsIgnoreCase("auto")) {
+                geyserConfig.getRemote().setAddress("test.geysermc.org");
+            }
         } catch (IOException ex) {
             geyserLogger.severe(LanguageUtils.getLocaleStringLog("geyser.config.failed"), ex);
             System.exit(0);
@@ -109,10 +112,11 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
         return geyserPingPassthrough;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public Path getConfigFolder() {
         // Return the current working directory
-        return Paths.get(System.getProperty("user.dir"));
+        return Paths.get(ctx.getFilesDir().getPath());
     }
 
     @Override
