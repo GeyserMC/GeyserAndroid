@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020 GeyserMC. http://geysermc.org
+ * Copyright (c) 2020-2020 GeyserMC. http://geysermc.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  *
  * @author GeyserMC
- * @link https://github.com/GeyserMC/Geyser
+ * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
 package org.geysermc.app.android.geyser;
@@ -29,6 +29,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import org.geysermc.app.android.geyser.command.GeyserCommandManager;
+import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.bootstrap.GeyserBootstrap;
 import org.geysermc.connector.command.CommandManager;
@@ -43,7 +44,6 @@ import org.geysermc.connector.utils.LanguageUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 public class GeyserAndroidBootstrap implements GeyserBootstrap {
@@ -76,7 +76,7 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
             }
         } catch (IOException ex) {
             geyserLogger.severe(LanguageUtils.getLocaleStringLog("geyser.config.failed"), ex);
-            System.exit(0);
+            return;
         }
         GeyserConfiguration.checkGeyserConfiguration(geyserConfig, geyserLogger);
 
@@ -89,7 +89,6 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
     @Override
     public void onDisable() {
         connector.shutdown();
-        System.exit(0);
     }
 
     @Override
@@ -112,11 +111,9 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
         return geyserPingPassthrough;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public Path getConfigFolder() {
-        // Return the current working directory
-        return Paths.get(ctx.getFilesDir().getPath());
+        return AndroidUtils.getStoragePath(ctx);
     }
 
     @Override

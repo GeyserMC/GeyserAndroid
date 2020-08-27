@@ -92,7 +92,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
-        android:gravity="start|top"
+        android:gravity="bottom"
         android:maxLines="2147483647"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical"

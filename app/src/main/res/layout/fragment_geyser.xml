@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.geyser.GeyserFragment">
 
-    <EditText
-        android:id="@+id/txtCommand"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:hint="@string/geyser_command"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnCommand"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/btnConfig"
         android:layout_width="0dp"
@@ -65,7 +51,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:gravity="start|top"
+        android:gravity="bottom"
         android:maxLines="2147483647"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical"
@@ -76,6 +62,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblLogs"
         app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/txtCommand"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="@string/geyser_command"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCommand"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnCommand"
