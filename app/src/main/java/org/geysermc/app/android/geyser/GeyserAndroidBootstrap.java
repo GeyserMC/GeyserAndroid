@@ -80,7 +80,7 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
         }
         GeyserConfiguration.checkGeyserConfiguration(geyserConfig, geyserLogger);
 
-        connector = GeyserConnector.start(PlatformType.STANDALONE, this);
+        connector = GeyserConnector.start(PlatformType.ANDROID, this);
         geyserCommandManager = new GeyserCommandManager(connector);
 
         geyserPingPassthrough = GeyserLegacyPingPassthrough.init(connector);

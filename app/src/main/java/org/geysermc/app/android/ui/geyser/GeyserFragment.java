@@ -53,6 +53,7 @@ public class GeyserFragment extends Fragment {
     private TextView txtLogs;
     private EditText txtCommand;
     private Button btnCommand;
+    private Thread statusUpdater;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -134,6 +135,26 @@ public class GeyserFragment extends Fragment {
                 AndroidUtils.showToast(getContext(), container.getResources().getString(R.string.geyser_not_running));
             }
         });
+
+        // Create a thread that runs every 1s updating the log text
+        statusUpdater = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!statusUpdater.isInterrupted()) {
+                        Thread.sleep(1000);
+                        if (GeyserConnector.getInstance() != null && GeyserConnector.getInstance().getAuthType() == null) {
+                            getActivity().runOnUiThread(() -> {
+                                btnStartStop.setText(container.getResources().getString(R.string.geyser_start));
+                                btnConfig.setEnabled(true);
+                            });
+                        }
+                    }
+                } catch (InterruptedException | NullPointerException e) { }
+            }
+        };
+
+        statusUpdater.start();
 
         return root;
     }
