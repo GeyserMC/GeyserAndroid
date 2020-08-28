@@ -25,6 +25,7 @@
 
 package org.geysermc.app.android.geyser;
 
+import org.geysermc.app.android.utils.EventListeners;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.command.CommandSender;
 
@@ -40,11 +41,7 @@ public class GeyserAndroidLogger implements org.geysermc.connector.GeyserLogger,
     private static String log = "";
 
     @Setter
-    private static LogEventListener listener;
-
-    public interface LogEventListener {
-        void onLogLine (String line);
-    }
+    private static EventListeners.LogEventListener listener;
 
     @Setter
     @Getter

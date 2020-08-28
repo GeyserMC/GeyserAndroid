@@ -87,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Disable epoll kqueue from loading
         System.getProperties().put("disableNativeEventLoop", "disableNativeEventLoop");
+
+        Intent intent = getIntent();
+        int navElement = intent.getIntExtra("nav_element", -1);
+        if (navElement != -1) {
+            NavigationUI.onNavDestinationSelected(navigationView.getMenu().findItem(navElement), navController);
+        }
     }
 
     @Override

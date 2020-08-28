@@ -36,12 +36,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.geysermc.app.android.BuildConfig;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.geyser.GeyserAndroidLogger;
+import org.geysermc.app.android.proxy.ProxyServer;
+import org.geysermc.app.android.service.GeyserService;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 
@@ -94,18 +97,12 @@ public class GeyserFragment extends Fragment {
         btnStartStop.setOnClickListener(v -> {
             Button self = (Button) v;
             if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
-                // Catch any errors to prevent the app crashing
-                try {
-                    GeyserConnector.getInstance().shutdown();
-                } catch (Exception ignored) { }
+                Intent serviceIntent = new Intent(getContext(), GeyserService.class);
+                getContext().stopService(serviceIntent);
 
                 self.setText(container.getResources().getString(R.string.geyser_start));
                 btnConfig.setEnabled(true);
             } else {
-                Runnable runnable = () -> new GeyserAndroidBootstrap().onEnable(getContext());
-                Thread thread = new Thread(runnable);
-                thread.start();
-
                 self.setText(container.getResources().getString(R.string.geyser_stop));
                 btnConfig.setEnabled(false);
 
@@ -120,6 +117,19 @@ public class GeyserFragment extends Fragment {
                         });
                     }
                 });
+
+                // Clear all the current disable listeners to preserve memory usage
+                GeyserAndroidBootstrap.getOnDisableListeners().clear();
+
+                GeyserAndroidBootstrap.getOnDisableListeners().add(() -> {
+                    getActivity().runOnUiThread(() -> {
+                        btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
+                        btnConfig.setEnabled(true);
+                    });
+                });
+
+                Intent serviceIntent = new Intent(getContext(), GeyserService.class);
+                ContextCompat.startForegroundService(getContext(), serviceIntent);
             }
         });
 
@@ -135,26 +145,6 @@ public class GeyserFragment extends Fragment {
                 AndroidUtils.showToast(getContext(), container.getResources().getString(R.string.geyser_not_running));
             }
         });
-
-        // Create a thread that runs every 1s updating the log text
-        statusUpdater = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!statusUpdater.isInterrupted()) {
-                        Thread.sleep(1000);
-                        if (GeyserConnector.getInstance() != null && GeyserConnector.getInstance().getAuthType() == null) {
-                            getActivity().runOnUiThread(() -> {
-                                btnStartStop.setText(container.getResources().getString(R.string.geyser_start));
-                                btnConfig.setEnabled(true);
-                            });
-                        }
-                    }
-                } catch (InterruptedException | NullPointerException e) { }
-            }
-        };
-
-        statusUpdater.start();
 
         return root;
     }

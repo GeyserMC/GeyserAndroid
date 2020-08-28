@@ -30,6 +30,7 @@ import android.content.Context;
 
 import org.geysermc.app.android.geyser.command.GeyserCommandManager;
 import org.geysermc.app.android.utils.AndroidUtils;
+import org.geysermc.app.android.utils.EventListeners;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.bootstrap.GeyserBootstrap;
 import org.geysermc.connector.command.CommandManager;
@@ -44,7 +45,12 @@ import org.geysermc.connector.utils.LanguageUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class GeyserAndroidBootstrap implements GeyserBootstrap {
 
@@ -56,6 +62,9 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
     private GeyserConnector connector;
 
     private Context ctx;
+
+    @Getter
+    private static List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList();
 
     public void onEnable(Context ctx) {
         this.ctx = ctx;
@@ -89,6 +98,10 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
     @Override
     public void onDisable() {
         connector.shutdown();
+
+        for (EventListeners.OnDisableEventListener onDisableListener : onDisableListeners) {
+            if (onDisableListener != null) onDisableListener.onDisable();
+        }
     }
 
     @Override

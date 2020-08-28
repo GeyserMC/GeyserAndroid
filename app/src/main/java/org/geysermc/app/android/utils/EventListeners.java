@@ -23,43 +23,22 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.proxy;
+package org.geysermc.app.android.utils;
 
-import org.geysermc.app.android.utils.EventListeners;
+public class EventListeners {
 
-import lombok.Getter;
-import lombok.Setter;
-
-public class ProxyLogger {
-
-    @Getter
-    private static String log = "";
-
-    @Setter
-    private static EventListeners.LogEventListener listener;
-
-    public void warning(String message) {
-        log += "WARN - " + message + "\n";
-        if (listener != null) listener.onLogLine("WARN - " + message);
-        // System.out.println("WARN - " + message);
+    /**
+     * This is used for adding a listener to the onDisable method of the {@link org.geysermc.app.android.geyser.GeyserAndroidBootstrap}
+     */
+    public interface OnDisableEventListener {
+        void onDisable();
     }
 
-    public void info(String message) {
-        log += "INFO - " + message + "\n";
-        if (listener != null) listener.onLogLine("INFO - " + message);
-        // System.out.println("INFO - " + message);
-    }
-
-    public void error(String message, Throwable error) {
-        log += "ERROR - " + message + "\n";
-        if (listener != null) listener.onLogLine("ERROR - " + message);
-        // System.out.println("ERROR - " + message + " - " + error.getMessage());
-        // error.printStackTrace();
-    }
-
-    public void debug(String message) {
-        log += "DEBUG - " + message + "\n";
-        if (listener != null) listener.onLogLine ("DEBUG - " + message);
-        // System.out.println("DEBUG - " + message);
+    /**
+     * This is used for adding a listener to the log events in both
+     * {@link org.geysermc.app.android.proxy.ProxyLogger} and {@link org.geysermc.app.android.geyser.GeyserAndroidLogger}
+     */
+    public interface LogEventListener {
+        void onLogLine (String line);
     }
 }

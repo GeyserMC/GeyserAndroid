@@ -32,8 +32,12 @@ import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
 
+import org.geysermc.app.android.utils.EventListeners;
+
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,12 +45,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class ProxyServer {
 
     public static final BedrockPacketCodec CODEC = Bedrock_v408.V408_CODEC;
 
-    private final Timer timer;
+    private Timer timer;
     private BedrockServer bdServer;
     private BedrockPong bdPong;
 
@@ -57,10 +62,10 @@ public class ProxyServer {
     private static ProxyServer instance;
 
     @Getter
-    private final ProxyLogger proxyLogger;
+    private ProxyLogger proxyLogger;
 
     @Getter
-    private final ScheduledExecutorService generalThreadPool;
+    private ScheduledExecutorService generalThreadPool;
 
     @Getter
     private final Map<String, Player> players = new HashMap<>();
@@ -71,10 +76,16 @@ public class ProxyServer {
     @Getter
     private int port;
 
+    @Getter
+    private static List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList();
+
     public ProxyServer(String address, int port) {
-        this.instance = this;
         this.address = address;
         this.port = port;
+    }
+
+    public void onEnable() {
+        this.instance = this;
 
         proxyLogger = new ProxyLogger();
 
@@ -89,6 +100,14 @@ public class ProxyServer {
         PaletteManger.init();
 
         start(19132);
+    }
+
+    public void onDisable() {
+        this.shutdown();
+
+        for (EventListeners.OnDisableEventListener onDisableListener : onDisableListeners) {
+            if (onDisableListener != null) onDisableListener.onDisable();
+        }
     }
 
     private void start(int port) {
@@ -130,10 +149,12 @@ public class ProxyServer {
     }
 
     public void shutdown() {
+        proxyLogger.info("Shutting down!");
         shuttingDown = true;
 
         bdServer.close();
         generalThreadPool.shutdown();
         this.instance = null;
+        proxyLogger.info("Successfully shutdown!");
     }
 }

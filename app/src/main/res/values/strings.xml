@@ -25,6 +25,7 @@
     <string name="proxy_logs">Logs</string>
     <string name="proxy_default_ip">test.geysermc.org</string>
     <string name="proxy_default_port">19132</string>
+    <string name="proxy_background_notification">LAN Proxy is running in the background!</string>
 
     <!-- Geyser Screen -->
     <string name="geyser_config">Config</string>
@@ -33,6 +34,7 @@
     <string name="geyser_logs">Logs</string>
     <string name="geyser_command">Command</string>
     <string name="geyser_not_running">Geyser is not currently running!</string>
+    <string name="geyser_background_notification">Geyser is running in the background!</string>
 
     <!-- About Screen -->
     <string name="about_credits_title">Credits</string>

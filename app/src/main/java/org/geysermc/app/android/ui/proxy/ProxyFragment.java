@@ -26,6 +26,7 @@
 package org.geysermc.app.android.ui.proxy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -36,13 +37,19 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import org.geysermc.app.android.BuildConfig;
 import org.geysermc.app.android.R;
+import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.proxy.ProxyLogger;
 import org.geysermc.app.android.proxy.ProxyServer;
+import org.geysermc.app.android.service.GeyserService;
+import org.geysermc.app.android.service.ProxyService;
 import org.geysermc.app.android.utils.AndroidUtils;
+import org.geysermc.connector.GeyserConnector;
 
 public class ProxyFragment extends Fragment {
 
@@ -52,11 +59,12 @@ public class ProxyFragment extends Fragment {
     private TextView txtPort;
     private Button btnStartStop;
     private TextView txtLogs;
+    private Thread statusUpdater;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_proxy, container, false);
 
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         txtAddress = root.findViewById(R.id.txtAddress);
         txtPort = root.findViewById(R.id.txtPort);
         btnStartStop = root.findViewById(R.id.btnStartStop);
@@ -106,16 +114,13 @@ public class ProxyFragment extends Fragment {
         btnStartStop.setOnClickListener(v -> {
             Button self = (Button) v;
             if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
-                ProxyServer.getInstance().shutdown();
+                Intent serviceIntent = new Intent(getContext(), GeyserService.class);
+                getContext().stopService(serviceIntent);
                 
                 self.setText(container.getResources().getString(R.string.proxy_start));
                 txtAddress.setEnabled(true);
                 txtPort.setEnabled(true);
             } else {
-                Runnable runnable = () -> new ProxyServer(txtAddress.getText().toString(), Integer.parseInt(txtPort.getText().toString()));
-                Thread thread = new Thread(runnable);
-                thread.start();
-
                 self.setText(container.getResources().getString(R.string.proxy_stop));
                 txtAddress.setEnabled(false);
                 txtPort.setEnabled(false);
@@ -131,6 +136,20 @@ public class ProxyFragment extends Fragment {
                         });
                     }
                 });
+
+                // Clear all the current disable listeners to preserve memory usage
+                ProxyServer.getOnDisableListeners().clear();
+
+                ProxyServer.getOnDisableListeners().add(() -> {
+                    getActivity().runOnUiThread(() -> {
+                        btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
+                        txtAddress.setEnabled(true);
+                        txtPort.setEnabled(true);
+                    });
+                });
+
+                Intent serviceIntent = new Intent(getContext(), ProxyService.class);
+                ContextCompat.startForegroundService(getContext(), serviceIntent);
             }
         });
 
