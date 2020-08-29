@@ -56,7 +56,6 @@ public class GeyserFragment extends Fragment {
     private TextView txtLogs;
     private EditText txtCommand;
     private Button btnCommand;
-    private Thread statusUpdater;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -73,20 +72,16 @@ public class GeyserFragment extends Fragment {
         txtLogs.setText(GeyserAndroidLogger.getLog());
 
         if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
-            btnStartStop.setText(container.getResources().getString(R.string.geyser_stop));
+            if (GeyserService.isFinishedStartup()) {
+                btnStartStop.setText(container.getResources().getString(R.string.geyser_stop));
+            } else {
+                btnStartStop.setText(container.getResources().getString(R.string.geyser_starting));
+                btnStartStop.setEnabled(false);
+            }
+
             btnConfig.setEnabled(false);
 
-            GeyserAndroidLogger.setListener(line -> {
-                if (txtLogs != null) {
-                    if (BuildConfig.DEBUG) {
-                        System.out.println(AndroidUtils.purgeColorCodes(line));
-                    }
-
-                    getActivity().runOnUiThread(() -> {
-                        txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
-                    });
-                }
-            });
+            setupListeners(container);
         }
 
         btnConfig.setOnClickListener(v -> {
@@ -103,30 +98,14 @@ public class GeyserFragment extends Fragment {
                 self.setText(container.getResources().getString(R.string.geyser_start));
                 btnConfig.setEnabled(true);
             } else {
-                self.setText(container.getResources().getString(R.string.geyser_stop));
+                self.setText(container.getResources().getString(R.string.geyser_starting));
+                self.setEnabled(false);
                 btnConfig.setEnabled(false);
-
-                GeyserAndroidLogger.setListener(line -> {
-                    if (txtLogs != null) {
-                        if (BuildConfig.DEBUG) {
-                            System.out.println(AndroidUtils.purgeColorCodes(line));
-                        }
-
-                        getActivity().runOnUiThread(() -> {
-                            txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
-                        });
-                    }
-                });
 
                 // Clear all the current disable listeners to preserve memory usage
                 GeyserAndroidBootstrap.getOnDisableListeners().clear();
 
-                GeyserAndroidBootstrap.getOnDisableListeners().add(() -> {
-                    getActivity().runOnUiThread(() -> {
-                        btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
-                        btnConfig.setEnabled(true);
-                    });
-                });
+                setupListeners(container);
 
                 Intent serviceIntent = new Intent(getContext(), GeyserService.class);
                 ContextCompat.startForegroundService(getContext(), serviceIntent);
@@ -135,17 +114,69 @@ public class GeyserFragment extends Fragment {
 
         btnCommand.setOnClickListener(v -> {
             if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
-                try {
-                    ((GeyserAndroidLogger)GeyserConnector.getInstance().getLogger()).runCommand(txtCommand.getText().toString());
-                    txtCommand.setText("");
-                } catch (Exception e) {
-                    AndroidUtils.showToast(getContext(), "Failed to run command!");
-                }
+                txtCommand.setEnabled(false);
+                btnCommand.setEnabled(false);
+
+                // Build the command runnable
+                Runnable runnable = () -> {
+                    try {
+                        ((GeyserAndroidLogger) GeyserConnector.getInstance().getLogger()).runCommand(txtCommand.getText().toString());
+
+                        getActivity().runOnUiThread(() -> {
+                            txtCommand.setText("");
+                        });
+                    } catch (Exception e) {
+                        AndroidUtils.showToast(getContext(), "Failed to run command!");
+                    }
+
+                    getActivity().runOnUiThread(() -> {
+                        txtCommand.setEnabled(true);
+                        btnCommand.setEnabled(true);
+                    });
+                };
+
+                // Run the command in a new thread to prevent it locking up the UI
+                Thread commandThread = new Thread(runnable);
+                commandThread.start();
             } else {
                 AndroidUtils.showToast(getContext(), container.getResources().getString(R.string.geyser_not_running));
             }
         });
 
         return root;
+    }
+
+    private void setupListeners(ViewGroup container) {
+        GeyserAndroidLogger.setListener(line -> {
+            if (txtLogs != null) {
+                if (BuildConfig.DEBUG) {
+                    System.out.println(AndroidUtils.purgeColorCodes(line));
+                }
+
+                getActivity().runOnUiThread(() -> {
+                    txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                });
+            }
+        });
+
+        GeyserAndroidBootstrap.getOnDisableListeners().add(() -> {
+            getActivity().runOnUiThread(() -> {
+                btnStartStop.setText(container.getResources().getString(R.string.geyser_start));
+                btnConfig.setEnabled(true);
+            });
+        });
+
+        GeyserService.setListener((failed) -> {
+            getActivity().runOnUiThread(() -> {
+                if (failed) {
+                    btnStartStop.setText(container.getResources().getString(R.string.geyser_start));
+                    btnStartStop.setEnabled(true);
+                    btnConfig.setEnabled(true);
+                } else {
+                    btnStartStop.setText(container.getResources().getString(R.string.geyser_stop));
+                    btnStartStop.setEnabled(true);
+                }
+            });
+        });
     }
 }

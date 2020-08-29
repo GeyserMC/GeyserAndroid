@@ -39,6 +39,13 @@ public class EventListeners {
      * {@link org.geysermc.app.android.proxy.ProxyLogger} and {@link org.geysermc.app.android.geyser.GeyserAndroidLogger}
      */
     public interface LogEventListener {
-        void onLogLine (String line);
+        void onLogLine(String line);
+    }
+
+    /**
+     * This is used for when the background service has finished starting
+     */
+    public interface StartedEventListener {
+        void onStarted(boolean failed);
     }
 }

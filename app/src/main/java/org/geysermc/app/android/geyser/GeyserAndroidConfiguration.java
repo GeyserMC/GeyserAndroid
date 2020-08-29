@@ -26,6 +26,7 @@
 package org.geysermc.app.android.geyser;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
 
@@ -38,6 +39,7 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeyserAndroidConfiguration extends GeyserJacksonConfiguration {
 
+    @JsonProperty("floodgate-key-file")
     private String floodgateKeyFile;
 
     @Override

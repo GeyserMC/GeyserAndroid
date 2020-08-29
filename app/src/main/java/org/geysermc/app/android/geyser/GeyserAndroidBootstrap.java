@@ -97,7 +97,10 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
 
     @Override
     public void onDisable() {
-        connector.shutdown();
+        try {
+            // Catch any errors to prevent the app crashing
+            connector.shutdown();
+        } catch (Exception ignored) { }
 
         for (EventListeners.OnDisableEventListener onDisableListener : onDisableListeners) {
             if (onDisableListener != null) onDisableListener.onDisable();
@@ -131,6 +134,6 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
 
     @Override
     public BootstrapDumpInfo getDumpInfo() {
-        return new BootstrapDumpInfo();
+        return new GeyserAndroidDumpInfo(ctx);
     }
 }

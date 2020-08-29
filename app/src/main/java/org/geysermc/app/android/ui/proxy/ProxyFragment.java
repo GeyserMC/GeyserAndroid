@@ -59,7 +59,6 @@ public class ProxyFragment extends Fragment {
     private TextView txtPort;
     private Button btnStartStop;
     private TextView txtLogs;
-    private Thread statusUpdater;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_proxy, container, false);
@@ -73,30 +72,21 @@ public class ProxyFragment extends Fragment {
         txtLogs.setMovementMethod(new ScrollingMovementMethod());
 
         txtLogs.setText(ProxyLogger.getLog());
+        txtAddress.setText(sharedPreferences.getString("proxy_address", getResources().getString(R.string.proxy_default_ip)));
+        txtPort.setText(sharedPreferences.getString("proxy_port", getResources().getString(R.string.proxy_default_port)));
 
         if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
-            ProxyServer proxyServer = ProxyServer.getInstance();
-            txtAddress.setText(proxyServer.getAddress());
-            txtPort.setText(String.valueOf(proxyServer.getPort()));
-            btnStartStop.setText(container.getResources().getString(R.string.proxy_stop));
+            if (ProxyService.isFinishedStartup()) {
+                btnStartStop.setText(container.getResources().getString(R.string.proxy_stop));
+            } else {
+                btnStartStop.setText(container.getResources().getString(R.string.proxy_starting));
+                btnStartStop.setEnabled(false);
+            }
 
             txtAddress.setEnabled(false);
             txtPort.setEnabled(false);
 
-            ProxyLogger.setListener(line -> {
-                if (txtLogs != null) {
-                    if (BuildConfig.DEBUG) {
-                        System.out.println(AndroidUtils.purgeColorCodes(line));
-                    }
-
-                    getActivity().runOnUiThread(() -> {
-                        txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
-                    });
-                }
-            });
-        } else {
-            txtAddress.setText(sharedPreferences.getString("proxy_address", getResources().getString(R.string.proxy_default_ip)));
-            txtPort.setText(sharedPreferences.getString("proxy_port", getResources().getString(R.string.proxy_default_port)));
+            setupListeners(container);
         }
 
         txtAddress.setOnFocusChangeListener((v, hasFocus) -> {
@@ -114,39 +104,22 @@ public class ProxyFragment extends Fragment {
         btnStartStop.setOnClickListener(v -> {
             Button self = (Button) v;
             if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
-                Intent serviceIntent = new Intent(getContext(), GeyserService.class);
+                Intent serviceIntent = new Intent(getContext(), ProxyService.class);
                 getContext().stopService(serviceIntent);
                 
                 self.setText(container.getResources().getString(R.string.proxy_start));
                 txtAddress.setEnabled(true);
                 txtPort.setEnabled(true);
             } else {
-                self.setText(container.getResources().getString(R.string.proxy_stop));
+                self.setText(container.getResources().getString(R.string.proxy_starting));
+                self.setEnabled(false);
                 txtAddress.setEnabled(false);
                 txtPort.setEnabled(false);
-
-                ProxyLogger.setListener(line -> {
-                    if (txtLogs != null) {
-                        if (BuildConfig.DEBUG) {
-                            System.out.println(AndroidUtils.purgeColorCodes(line));
-                        }
-
-                        getActivity().runOnUiThread(() -> {
-                            txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
-                        });
-                    }
-                });
 
                 // Clear all the current disable listeners to preserve memory usage
                 ProxyServer.getOnDisableListeners().clear();
 
-                ProxyServer.getOnDisableListeners().add(() -> {
-                    getActivity().runOnUiThread(() -> {
-                        btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
-                        txtAddress.setEnabled(true);
-                        txtPort.setEnabled(true);
-                    });
-                });
+                setupListeners(container);
 
                 Intent serviceIntent = new Intent(getContext(), ProxyService.class);
                 ContextCompat.startForegroundService(getContext(), serviceIntent);
@@ -154,5 +127,41 @@ public class ProxyFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void setupListeners(ViewGroup container) {
+        ProxyLogger.setListener(line -> {
+            if (txtLogs != null) {
+                if (BuildConfig.DEBUG) {
+                    System.out.println(AndroidUtils.purgeColorCodes(line));
+                }
+
+                getActivity().runOnUiThread(() -> {
+                    txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
+                });
+            }
+        });
+
+        ProxyServer.getOnDisableListeners().add(() -> {
+            getActivity().runOnUiThread(() -> {
+                btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
+                txtAddress.setEnabled(true);
+                txtPort.setEnabled(true);
+            });
+        });
+
+        ProxyService.setListener((failed) -> {
+            getActivity().runOnUiThread(() -> {
+                if (failed) {
+                    btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
+                    btnStartStop.setEnabled(true);
+                    txtAddress.setEnabled(true);
+                    txtPort.setEnabled(true);
+                } else {
+                    btnStartStop.setText(container.getResources().getString(R.string.proxy_stop));
+                    btnStartStop.setEnabled(true);
+                }
+            });
+        });
     }
 }

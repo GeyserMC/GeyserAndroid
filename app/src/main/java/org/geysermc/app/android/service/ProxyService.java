@@ -42,8 +42,10 @@ import androidx.preference.PreferenceManager;
 import org.geysermc.app.android.MainActivity;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.proxy.ProxyServer;
+import org.geysermc.app.android.utils.EventListeners;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class ProxyService extends Service {
 
@@ -53,29 +55,32 @@ public class ProxyService extends Service {
     private ProxyServer proxy;
 
     @Getter
-    private static boolean running = false;
+    private static boolean finishedStartup;
+
+    @Setter
+    private static EventListeners.StartedEventListener listener;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        running = true;
-
-        Intent stopSelf = new Intent(this, ProxyService.class);
-        stopSelf.setAction(this.ACTION_STOP_SERVICE);
-
-        PendingIntent stopPendingIntent = PendingIntent.getService(this, NOTIFCATION_ID + 1, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
+        finishedStartup = false;
 
         Intent openLogs = new Intent(this, MainActivity.class);
         openLogs.putExtra("nav_element", R.id.nav_proxy);
 
-        PendingIntent openLogsPendingIntent = PendingIntent.getActivity(this, NOTIFCATION_ID + 2, openLogs, 0);
+        PendingIntent openLogsPendingIntent = PendingIntent.getActivity(this, NOTIFCATION_ID + 1, openLogs, 0);
+
+        Intent stopSelf = new Intent(this, ProxyService.class);
+        stopSelf.setAction(this.ACTION_STOP_SERVICE);
+
+        PendingIntent stopPendingIntent = PendingIntent.getService(this, NOTIFCATION_ID + 2, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, "proxy_channel")
                 .setSmallIcon(R.drawable.ic_menu_proxy)
                 .setContentTitle(getString(R.string.proxy_background_notification))
-                .addAction(R.drawable.ic_menu_manage, getString(R.string.proxy_stop), stopPendingIntent)
                 .addAction(R.drawable.ic_notification_logs, getString(R.string.proxy_logs), openLogsPendingIntent)
+                .addAction(R.drawable.ic_menu_manage, getString(R.string.proxy_stop), stopPendingIntent)
                 .build();
 
         createNotificationChannel();
@@ -90,22 +95,28 @@ public class ProxyService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        running = false;
-
-        // Catch any errors to prevent the app crashing
-        try {
-            ProxyServer.getInstance().onDisable();
-        } catch (Exception ignored) { }
+        ProxyServer.getInstance().onDisable();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (ACTION_STOP_SERVICE.equals(intent.getAction())) {
-            stopSelf();
+            if (finishedStartup) {
+                stopSelf();
+            }
         } else {
-            Runnable runnable = () -> proxy.onEnable();
-            Thread thread = new Thread(runnable);
-            thread.start();
+            Runnable runnable = () -> {
+                try {
+                    proxy.onEnable();
+                    if (listener != null) listener.onStarted(false);
+                    finishedStartup = true;
+                } catch (Exception e) {
+                    if (listener != null) listener.onStarted(true);
+                    stopForeground(true);
+                }
+            };
+            Thread proxyThread = new Thread(runnable);
+            proxyThread.start();
         }
 
         return super.onStartCommand(intent, flags, startId);

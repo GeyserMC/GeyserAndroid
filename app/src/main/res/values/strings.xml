@@ -21,6 +21,7 @@
     <string name="proxy_address">Address</string>
     <string name="proxy_port">Port</string>
     <string name="proxy_start">Start</string>
+    <string name="proxy_starting">Starting</string>
     <string name="proxy_stop">Stop</string>
     <string name="proxy_logs">Logs</string>
     <string name="proxy_default_ip">test.geysermc.org</string>
@@ -30,6 +31,7 @@
     <!-- Geyser Screen -->
     <string name="geyser_config">Config</string>
     <string name="geyser_start">Start</string>
+    <string name="geyser_starting">Starting</string>
     <string name="geyser_stop">Stop</string>
     <string name="geyser_logs">Logs</string>
     <string name="geyser_command">Command</string>

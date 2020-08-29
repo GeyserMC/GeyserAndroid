@@ -40,9 +40,11 @@ import androidx.core.app.NotificationCompat;
 import org.geysermc.app.android.MainActivity;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
+import org.geysermc.app.android.utils.EventListeners;
 import org.geysermc.connector.GeyserConnector;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class GeyserService extends Service {
 
@@ -52,29 +54,32 @@ public class GeyserService extends Service {
     private GeyserAndroidBootstrap bootstrap;
 
     @Getter
-    private static boolean running = false;
+    private static boolean finishedStartup;
+
+    @Setter
+    private static EventListeners.StartedEventListener listener;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        running = true;
-
-        Intent stopSelf = new Intent(this, GeyserService.class);
-        stopSelf.setAction(this.ACTION_STOP_SERVICE);
-
-        PendingIntent stopPendingIntent = PendingIntent.getService(this, NOTIFCATION_ID + 1, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
+        finishedStartup = false;
 
         Intent openLogs = new Intent(this, MainActivity.class);
         openLogs.putExtra("nav_element", R.id.nav_geyser);
 
-        PendingIntent openLogsPendingIntent = PendingIntent.getActivity(this, NOTIFCATION_ID + 2, openLogs, 0);
+        PendingIntent openLogsPendingIntent = PendingIntent.getActivity(this, NOTIFCATION_ID + 1, openLogs, 0);
+
+        Intent stopSelf = new Intent(this, GeyserService.class);
+        stopSelf.setAction(this.ACTION_STOP_SERVICE);
+
+        PendingIntent stopPendingIntent = PendingIntent.getService(this, NOTIFCATION_ID + 2, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, "geyser_channel")
                 .setSmallIcon(R.drawable.ic_menu_geyser)
                 .setContentTitle(getString(R.string.geyser_background_notification))
-                .addAction(R.drawable.ic_menu_manage, getString(R.string.geyser_stop), stopPendingIntent)
                 .addAction(R.drawable.ic_notification_logs, getString(R.string.geyser_logs), openLogsPendingIntent)
+                .addAction(R.drawable.ic_menu_manage, getString(R.string.geyser_stop), stopPendingIntent)
                 .build();
 
         createNotificationChannel();
@@ -88,22 +93,28 @@ public class GeyserService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        running = false;
-
-        // Catch any errors to prevent the app crashing
-        try {
-            GeyserConnector.getInstance().shutdown();
-        } catch (Exception ignored) { }
+        bootstrap.onDisable();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (ACTION_STOP_SERVICE.equals(intent.getAction())) {
-            stopSelf();
+            if (finishedStartup) {
+                stopSelf();
+            }
         } else {
-            Runnable runnable = () -> bootstrap.onEnable(getApplicationContext());
-            Thread thread = new Thread(runnable);
-            thread.start();
+            Runnable runnable = () -> {
+                try {
+                    bootstrap.onEnable(getApplicationContext());
+                    finishedStartup = true;
+                    if (listener != null) listener.onStarted(false);
+                } catch (Exception e) {
+                    if (listener != null) listener.onStarted(true);
+                    stopForeground(true);
+                }
+            };
+            Thread bootstrapThread = new Thread(runnable);
+            bootstrapThread.start();
         }
 
         return super.onStartCommand(intent, flags, startId);
