@@ -45,7 +45,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class ProxyServer {
 

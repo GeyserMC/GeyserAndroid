@@ -45,6 +45,6 @@
     <!-- Settings Screen -->
     <string name="settings_geyser">Geyser</string>
     <string name="settings_storage">Storage Location</string>
-    <string name="settings_branch">Branch</string>
-    <string name="settings_branch_refresh">Refresh branches</string>
+    <string name="settings_config_editor">Config Editor</string>
+    <string name="settings_reset_config">Reset Geyser config</string>
 </resources>

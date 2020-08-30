@@ -25,7 +25,6 @@
 
 package org.geysermc.app.android.ui.proxy;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,13 +42,10 @@ import androidx.preference.PreferenceManager;
 
 import org.geysermc.app.android.BuildConfig;
 import org.geysermc.app.android.R;
-import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.proxy.ProxyLogger;
 import org.geysermc.app.android.proxy.ProxyServer;
-import org.geysermc.app.android.service.GeyserService;
 import org.geysermc.app.android.service.ProxyService;
 import org.geysermc.app.android.utils.AndroidUtils;
-import org.geysermc.connector.GeyserConnector;
 
 public class ProxyFragment extends Fragment {
 

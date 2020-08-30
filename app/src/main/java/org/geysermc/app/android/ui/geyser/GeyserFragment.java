@@ -43,7 +43,6 @@ import org.geysermc.app.android.BuildConfig;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.geyser.GeyserAndroidLogger;
-import org.geysermc.app.android.proxy.ProxyServer;
 import org.geysermc.app.android.service.GeyserService;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
@@ -85,6 +84,8 @@ public class GeyserFragment extends Fragment {
         }
 
         btnConfig.setOnClickListener(v -> {
+            AndroidUtils.ShowLoader(getContext());
+
             Intent intent = new Intent(getActivity(), ConfigEditorActivity.class);
             startActivity(intent);
         });

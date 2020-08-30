@@ -26,6 +26,7 @@
 package org.geysermc.app.android.ui.geyser;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.AndroidUtils;
@@ -46,76 +48,96 @@ public class ConfigEditorActivity extends AppCompatActivity {
     private EditText txtConfig;
     private String configText = "Unable to locate config, please start the server first!";
     private File configFile;
+    private boolean showRaw;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_config_editor);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        showRaw = preferences.getString("geyser_config_editor", "pretty").equals("raw");
+
+        if (showRaw == true) {
+            setContentView(R.layout.activity_config_editor_raw);
+
+            // Load the config
+            txtConfig = findViewById(R.id.txtConfig);
+
+            configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
+            if (configFile.exists()) {
+                // Enable horizontal scrolling
+                txtConfig.setHorizontallyScrolling(true);
+
+                configText = AndroidUtils.fileToString(configFile);
+                txtConfig.setText(configText);
+            } else {
+                txtConfig.setText(configText);
+                txtConfig.setEnabled(false);
+            }
+
+            AndroidUtils.HideLoader();
+        } else {
+            // Show the pretty editor
+            setContentView(R.layout.activity_config_editor_pretty);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings, new ConfigEditorFragment())
+                    .commit();
+        }
 
         // Enable the back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        // Load the config
-        txtConfig = findViewById(R.id.txtConfig);
-
-        configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
-        if (configFile.exists()) {
-            // Enable horizontal scrolling
-            txtConfig.setHorizontallyScrolling(true);
-
-            configText = AndroidUtils.fileToString(configFile);
-            txtConfig.setText(configText);
-        } else {
-            txtConfig.setText(configText);
-            txtConfig.setEnabled(false);
-        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // The back button
             case android.R.id.home:
                 if (checkForChanges()) {
-                    this.finish();
+                    super.onBackPressed();
                 }
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean checkForChanges() {
-        // Check if they have changed any values
-        if (!configText.equals(txtConfig.getText().toString())) {
-            AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
-            confirmDialog.setTitle("Save");
-            confirmDialog.setMessage("Do you wish to save the config?");
-            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save", (dialog, id) -> {
-                try {
-                    FileWriter configWriter = new FileWriter(configFile);
-                    configWriter.write(txtConfig.getText().toString());
-                    configWriter.close();
+        if (showRaw) {
+            // Check if they have changed any values
+            if (!configText.equals(txtConfig.getText().toString())) {
+                AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
+                confirmDialog.setTitle("Save");
+                confirmDialog.setMessage("Do you wish to save the config?");
+                confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save", (dialog, id) -> {
+                    try {
+                        FileWriter configWriter = new FileWriter(configFile);
+                        configWriter.write(txtConfig.getText().toString());
+                        configWriter.close();
+                        this.finish();
+                    } catch (IOException e) {
+                        AndroidUtils.showToast(getApplicationContext(), "Unable to write config!");
+                    }
+                });
+
+                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Discard", (dialog, id) -> {
                     this.finish();
-                } catch (IOException e) {
-                    AndroidUtils.showToast(getApplicationContext(), "Unable to write config!");
-                }
-            });
+                });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Discard", (dialog, id) -> {
-                this.finish();
-            });
+                confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (dialog, id) -> {
+                    // Do nothing
+                });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (dialog, id) -> {
-                // Do nothing
-            });
+                confirmDialog.show();
 
-            confirmDialog.show();
-
-            return false;
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return true;
         }

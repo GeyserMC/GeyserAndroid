@@ -26,7 +26,6 @@
 package org.geysermc.app.android.ui.settings;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
@@ -48,10 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        // This is so we can use network and certain permissions in other threads
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
     }
 
     @Override

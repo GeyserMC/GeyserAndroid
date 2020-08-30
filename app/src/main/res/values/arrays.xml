@@ -9,4 +9,15 @@
         <item>internal</item>
         <item>external</item>
     </string-array>
+
+    <!-- Config Editor Preference -->
+    <string-array name="config_editor_entries">
+        <item>Pretty</item>
+        <item>Raw</item>
+    </string-array>
+
+    <string-array name="config_editor_values">
+        <item>pretty</item>
+        <item>raw</item>
+    </string-array>
 </resources>

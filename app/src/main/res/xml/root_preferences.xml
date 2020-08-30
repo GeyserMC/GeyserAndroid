@@ -10,15 +10,17 @@
             app:title="@string/settings_storage"
             app:useSimpleSummaryProvider="true" />
 
-        <!--<ListPreference
-            app:defaultValue="master"
-            app:key="geyser_branch"
-            app:title="@string/settings_branch"
-            app:useSimpleSummaryProvider="true" />-->
+        <ListPreference
+            app:defaultValue="pretty"
+            app:entries="@array/config_editor_entries"
+            app:entryValues="@array/config_editor_values"
+            app:key="geyser_config_editor"
+            app:title="@string/settings_config_editor"
+            app:useSimpleSummaryProvider="true" />
 
-        <!--<Preference
-            app:key="branch_refresh"
-            app:title="@string/settings_branch_refresh" />-->
+        <Preference
+            app:key="geyser_reset_config"
+            app:title="@string/settings_reset_config" />
 
     </PreferenceCategory>
 

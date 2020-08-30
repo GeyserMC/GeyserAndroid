@@ -41,7 +41,6 @@ import org.geysermc.app.android.MainActivity;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.utils.EventListeners;
-import org.geysermc.connector.GeyserConnector;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -26,6 +26,7 @@
 package org.geysermc.app.android.utils;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class AndroidUtils {
+
+    private static ProgressDialog appLoader;
 
     /**
      * Open the default browser at a given URL
@@ -131,5 +134,22 @@ public class AndroidUtils {
         }
 
         return Paths.get(storageDir.getPath());
+    }
+
+    public static void ShowLoader(Context ctx) {
+        if (appLoader == null) {
+            appLoader = new ProgressDialog(ctx);
+            appLoader.setTitle("Loading...");
+            appLoader.setIndeterminate(false);
+            appLoader.setCancelable(true);
+        }
+
+        appLoader.show();
+    }
+
+    public static void HideLoader() {
+        if (appLoader != null) {
+            appLoader.dismiss();
+        }
     }
 }
