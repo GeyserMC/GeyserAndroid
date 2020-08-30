@@ -40,6 +40,7 @@ import androidx.preference.SwitchPreference;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 
 import org.geysermc.app.android.geyser.GeyserAndroidConfiguration;
@@ -52,17 +53,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class ConfigEditorFragment extends PreferenceFragmentCompat {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private File configFile;
 
+    @Getter
+    private static GeyserAndroidConfiguration configuration;
+
+    @Getter
+    private static boolean configChanged;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         PreferenceScreen preferenceScreen = getPreferenceManager().createPreferenceScreen(getContext());
         setPreferenceScreen(preferenceScreen);
+
+        configChanged = false;
 
         configFile = AndroidUtils.getStoragePath(getContext()).resolve("config.yml").toFile();
         if (configFile.exists()) {
@@ -102,7 +113,7 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
 
     public void parseConfig(PreferenceScreen preferenceScreen, File configFile) throws IOException {
         // parse the configuration
-        GeyserAndroidConfiguration configuration = FileUtils.loadConfig(configFile, GeyserAndroidConfiguration.class);
+        configuration = FileUtils.loadConfig(configFile, GeyserAndroidConfiguration.class);
 
         // Get the available properties from the class
         List<BeanPropertyDefinition> availableProperties = getPOJOForClass(GeyserAndroidConfiguration.class);
@@ -153,16 +164,15 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
                 // Loop the sub class properties
                 for (BeanPropertyDefinition subProperty : getPOJOForClass(property.getRawPrimaryType())) {
                     try {
-                        createPreference(currentCategory, subProperty, subProperty.getGetter().callOn(property.getGetter().callOn(configuration)));
+                        Object subConfig = property.getGetter().callOn(configuration);
+                        createPreference(currentCategory, subProperty, subConfig);
                     } catch (Exception e) { }
                 }
 
                 continue;
             }
 
-            try {
-                createPreference(advancedCategory, property, property.getGetter().callOn(configuration));
-            } catch (Exception e) { }
+            createPreference(advancedCategory, property, configuration);
         }
     }
 
@@ -197,9 +207,9 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
      *
      * @param category The category to add the preference to
      * @param property The property definition to use
-     * @param value The value from the config
+     * @param parentObject The parent object of the current property
      */
-    private void createPreference(PreferenceCategory category, BeanPropertyDefinition property, Object value) {
+    private void createPreference(PreferenceCategory category, BeanPropertyDefinition property, Object parentObject) {
         Preference newPreference;
 
         // Do any specific initialisation for the property
@@ -223,7 +233,7 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
         } else if (boolean.class.equals(property.getRawPrimaryType())) {
             newPreference = new SwitchPreference(category.getParent().getContext());
             try {
-                ((SwitchPreference) newPreference).setChecked((boolean) value);
+                ((SwitchPreference) newPreference).setChecked((boolean) property.getGetter().callOn(parentObject));
             } catch (Exception ignored) {
                 ((SwitchPreference) newPreference).setChecked(true);
             }
@@ -231,13 +241,17 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
             newPreference = new EditTextPreference(category.getParent().getContext());
             ((EditTextPreference) newPreference).setOnBindEditTextListener((editText) -> {
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                editText.setText(value.toString());
                 editText.setSelection(editText.getText().length());
+                try {
+                    editText.setText(property.getGetter().callOn(parentObject).toString());
+                } catch (Exception ignored) { }
             });
         } else {
             newPreference = new EditTextPreference(category.getParent().getContext());
             ((EditTextPreference) newPreference).setOnBindEditTextListener((editText) -> {
-                editText.setText(value.toString());
+                try {
+                    editText.setText(property.getGetter().callOn(parentObject).toString());
+                } catch (Exception ignored) { }
                 editText.setSelection(editText.getText().length());
             });
         }
@@ -246,8 +260,25 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
         if (newPreference != null) {
             // Only set the summary if its not already been set
             if (newPreference.getSummary() == null) {
-                newPreference.setSummary(value.toString());
+                try {
+                    newPreference.setSummary(property.getGetter().callOn(parentObject).toString());
+                } catch (Exception ignored) { }
             }
+
+            newPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                // Update the preference
+                preference.setSummary(newValue.toString());
+                configChanged = true;
+
+                // Get the value and force the update
+                try {
+                    AnnotatedField field = property.getField();
+                    field.fixAccess(true);
+                    field.setValue(parentObject, newValue);
+                } catch (Exception ignored) { }
+
+                return true;
+            });
 
             newPreference.setTitle(property.getName());
             newPreference.setKey(property.getName());

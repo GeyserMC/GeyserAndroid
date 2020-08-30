@@ -25,6 +25,9 @@
 
 package org.geysermc.app.android.geyser;
 
+import android.annotation.SuppressLint;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -39,9 +42,10 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeyserAndroidConfiguration extends GeyserJacksonConfiguration {
 
-    @JsonProperty("floodgate-key-file")
     private String floodgateKeyFile;
 
+    @JsonIgnore
+    @SuppressLint("NewApi")
     @Override
     public Path getFloodgateKeyFile() {
         return Paths.get(floodgateKeyFile);

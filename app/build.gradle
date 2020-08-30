@@ -10,8 +10,8 @@ android {
         applicationId "org.geysermc.app.android"
         minSdkVersion 24 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
         targetSdkVersion 28
-        versionCode 100003 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
-        versionName "1.0.3-BETA"
+        versionCode 100004 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
+        versionName "1.0.4-BETA"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

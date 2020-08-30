@@ -36,8 +36,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.AndroidUtils;
+import org.geysermc.connector.common.serializer.AsteriskSerializer;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -59,14 +63,15 @@ public class ConfigEditorActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         showRaw = preferences.getString("geyser_config_editor", "pretty").equals("raw");
 
+        // Fetch the stored config file
+        configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
+
         if (showRaw) {
             setContentView(R.layout.activity_config_editor_raw);
 
             // Load the config
             txtConfig = findViewById(R.id.txtConfig);
 
-            // Fetch the stored config file
-            configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
             if (configFile.exists()) {
                 // Enable horizontal scrolling
                 txtConfig.setHorizontallyScrolling(true);
@@ -142,6 +147,37 @@ public class ConfigEditorActivity extends AppCompatActivity {
             } else {
                 return true;
             }
+        } else if (ConfigEditorFragment.isConfigChanged()) {
+            AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
+            confirmDialog.setTitle("Save");
+            confirmDialog.setMessage("Do you wish to save the config?");
+            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save", (dialog, id) -> {
+                try {
+                    AsteriskSerializer.showSensitive = true;
+
+                    // Build and write the updated config yml
+                    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+                    mapper.writeValue(configFile, ConfigEditorFragment.getConfiguration());
+
+                    AsteriskSerializer.showSensitive = false;
+
+                    this.finish();
+                } catch (IOException e) {
+                    AndroidUtils.showToast(getApplicationContext(), "Unable to write config!");
+                }
+            });
+
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Discard", (dialog, id) -> {
+                this.finish();
+            });
+
+            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (dialog, id) -> {
+                // Do nothing
+            });
+
+            confirmDialog.show();
+
+            return false;
         } else {
             return true;
         }
