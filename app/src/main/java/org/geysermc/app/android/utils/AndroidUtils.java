@@ -26,6 +26,7 @@
 package org.geysermc.app.android.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -128,6 +129,7 @@ public class AndroidUtils {
     public static Path getStoragePath(Context ctx) {
         File storageDir = ctx.getFilesDir();
 
+        // Get the current storage preference and change the path accordingly
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         if (preferences.getString("geyser_storage", "internal").equals("external")) {
             storageDir = ctx.getExternalFilesDir("");
@@ -136,6 +138,11 @@ public class AndroidUtils {
         return Paths.get(storageDir.getPath());
     }
 
+    /**
+     * Create a popup loader for the current context
+     *
+     * @param ctx Context to create the loader for
+     */
     public static void ShowLoader(Context ctx) {
         if (appLoader == null) {
             appLoader = new ProgressDialog(ctx);
@@ -147,9 +154,25 @@ public class AndroidUtils {
         appLoader.show();
     }
 
+    /**
+     * Hide the loader if there is one
+     */
     public static void HideLoader() {
         if (appLoader != null) {
             appLoader.dismiss();
+        }
+    }
+
+    /**
+     * Run an action on the UI thread.
+     * Checks if the activity is not null first.
+     *
+     * @param activity Activity to run the action on
+     * @param action The action to run
+     */
+    public static void runOnUiThread(Activity activity, Runnable action) {
+        if (activity != null) {
+            activity.runOnUiThread(action);
         }
     }
 }

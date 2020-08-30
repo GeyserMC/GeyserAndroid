@@ -47,7 +47,6 @@ import org.geysermc.app.android.service.GeyserService;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 
-
 public class GeyserFragment extends Fragment {
 
     private Button btnConfig;
@@ -66,11 +65,13 @@ public class GeyserFragment extends Fragment {
         txtCommand = root.findViewById(R.id.txtCommand);
         btnCommand = root.findViewById(R.id.btnCommand);
 
+        // Set the movement method and contents for the logs
         txtLogs.setMovementMethod(new ScrollingMovementMethod());
-
         txtLogs.setText(GeyserAndroidLogger.getLog());
 
+        // Check if the server is already running
         if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
+            // Check if the server is still starting
             if (GeyserService.isFinishedStartup()) {
                 btnStartStop.setText(container.getResources().getString(R.string.geyser_stop));
             } else {
@@ -80,6 +81,7 @@ public class GeyserFragment extends Fragment {
 
             btnConfig.setEnabled(false);
 
+            // Setup the listeners for the current screen
             setupListeners(container);
         }
 
@@ -106,8 +108,10 @@ public class GeyserFragment extends Fragment {
                 // Clear all the current disable listeners to preserve memory usage
                 GeyserAndroidBootstrap.getOnDisableListeners().clear();
 
+                // Setup the listeners for the current screen
                 setupListeners(container);
 
+                // Start the Geyser service
                 Intent serviceIntent = new Intent(getContext(), GeyserService.class);
                 ContextCompat.startForegroundService(getContext(), serviceIntent);
             }
@@ -115,22 +119,29 @@ public class GeyserFragment extends Fragment {
 
         btnCommand.setOnClickListener(v -> {
             if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
+                // Disable the command input while its processing
                 txtCommand.setEnabled(false);
                 btnCommand.setEnabled(false);
 
                 // Build the command runnable
                 Runnable runnable = () -> {
                     try {
+                        // Run the command
                         ((GeyserAndroidLogger) GeyserConnector.getInstance().getLogger()).runCommand(txtCommand.getText().toString());
 
-                        getActivity().runOnUiThread(() -> {
+                        // Clear the command input
+                        AndroidUtils.runOnUiThread(getActivity(), () -> {
                             txtCommand.setText("");
                         });
                     } catch (Exception e) {
-                        AndroidUtils.showToast(getContext(), "Failed to run command!");
+                        // The command failed let the user know
+                        AndroidUtils.runOnUiThread(getActivity(), () -> {
+                            AndroidUtils.showToast(getContext(), "Failed to run command!");
+                        });
                     }
 
-                    getActivity().runOnUiThread(() -> {
+                    // Re-enable the command input
+                    AndroidUtils.runOnUiThread(getActivity(), () -> {
                         txtCommand.setEnabled(true);
                         btnCommand.setEnabled(true);
                     });
@@ -147,28 +158,37 @@ public class GeyserFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Setup the listeners for all the events of the logger and service
+     *
+     * @param container The container to use for getting resources
+     */
     private void setupListeners(ViewGroup container) {
+        // When we have a new log line add it to txtLogs
         GeyserAndroidLogger.setListener(line -> {
             if (txtLogs != null) {
+                // If we are in debug then print logs to the console aswell
                 if (BuildConfig.DEBUG) {
                     System.out.println(AndroidUtils.purgeColorCodes(line));
                 }
 
-                getActivity().runOnUiThread(() -> {
+                AndroidUtils.runOnUiThread(getActivity(), () -> {
                     txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
                 });
             }
         });
 
+        // When the server is disabled toggle the button
         GeyserAndroidBootstrap.getOnDisableListeners().add(() -> {
-            getActivity().runOnUiThread(() -> {
+            AndroidUtils.runOnUiThread(getActivity(), () -> {
                 btnStartStop.setText(container.getResources().getString(R.string.geyser_start));
                 btnConfig.setEnabled(true);
             });
         });
 
+        // When the server has started and its failed status
         GeyserService.setListener((failed) -> {
-            getActivity().runOnUiThread(() -> {
+            AndroidUtils.runOnUiThread(getActivity(), () -> {
                 if (failed) {
                     btnStartStop.setText(container.getResources().getString(R.string.geyser_start));
                     btnStartStop.setEnabled(true);

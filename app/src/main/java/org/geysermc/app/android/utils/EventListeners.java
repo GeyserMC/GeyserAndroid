@@ -25,6 +25,9 @@
 
 package org.geysermc.app.android.utils;
 
+/**
+ * This class is used to store various interfaces for event listeners
+ */
 public class EventListeners {
 
     /**

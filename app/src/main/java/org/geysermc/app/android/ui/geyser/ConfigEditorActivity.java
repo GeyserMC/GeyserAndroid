@@ -55,20 +55,23 @@ public class ConfigEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Get the users editor preference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         showRaw = preferences.getString("geyser_config_editor", "pretty").equals("raw");
 
-        if (showRaw == true) {
+        if (showRaw) {
             setContentView(R.layout.activity_config_editor_raw);
 
             // Load the config
             txtConfig = findViewById(R.id.txtConfig);
 
+            // Fetch the stored config file
             configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
             if (configFile.exists()) {
                 // Enable horizontal scrolling
                 txtConfig.setHorizontallyScrolling(true);
 
+                // Get the config file text
                 configText = AndroidUtils.fileToString(configFile);
                 txtConfig.setText(configText);
             } else {
@@ -76,6 +79,7 @@ public class ConfigEditorActivity extends AppCompatActivity {
                 txtConfig.setEnabled(false);
             }
 
+            // Hide the loader
             AndroidUtils.HideLoader();
         } else {
             // Show the pretty editor

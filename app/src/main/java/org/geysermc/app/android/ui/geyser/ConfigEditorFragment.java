@@ -67,10 +67,16 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
         configFile = AndroidUtils.getStoragePath(getContext()).resolve("config.yml").toFile();
         if (configFile.exists()) {
             try {
+                // Try and parse the config file
                 parseConfig(preferenceScreen, configFile);
+
+                // Hide the loader
                 AndroidUtils.HideLoader();
             } catch (IOException e) {
+                // Hide the loader
                 AndroidUtils.HideLoader();
+
+                // Let the user know the config failed to load
                 new AlertDialog.Builder(getContext())
                         .setTitle("Config failed to load")
                         .setMessage("The config failed to load, please reset it manually!")
@@ -80,8 +86,10 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
                         .show();
             }
         } else {
+            // Hide the loader
             AndroidUtils.HideLoader();
 
+            // Let the user know the config doesn't exist
             new AlertDialog.Builder(getContext())
                     .setTitle("Config missing")
                     .setMessage("No config has been created, please start the server first!")
@@ -158,6 +166,12 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
         }
     }
 
+    /**
+     * Get the {@link BeanPropertyDefinition}s for the given class
+     *
+     * @param clazz The class to get the definitions for
+     * @return A list of {@link BeanPropertyDefinition} for the given class
+     */
     private List<BeanPropertyDefinition> getPOJOForClass(Class<?> clazz) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructType(clazz);
 
@@ -177,6 +191,14 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Create a preference from the given data.
+     * Will try to generate a relevant preference for the property.
+     *
+     * @param category The category to add the preference to
+     * @param property The property definition to use
+     * @param value The value from the config
+     */
     private void createPreference(PreferenceCategory category, BeanPropertyDefinition property, Object value) {
         Preference newPreference;
 

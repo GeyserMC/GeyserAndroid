@@ -65,13 +65,17 @@ public class ProxyFragment extends Fragment {
         btnStartStop = root.findViewById(R.id.btnStartStop);
         txtLogs = root.findViewById(R.id.txtLogs);
 
+        // Set the movement method for the logs
         txtLogs.setMovementMethod(new ScrollingMovementMethod());
 
+        // Set the initial text for all the UI elements
         txtLogs.setText(ProxyLogger.getLog());
         txtAddress.setText(sharedPreferences.getString("proxy_address", getResources().getString(R.string.proxy_default_ip)));
         txtPort.setText(sharedPreferences.getString("proxy_port", getResources().getString(R.string.proxy_default_port)));
 
+        // Check if the server is already running
         if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
+            // Check if the server is still starting
             if (ProxyService.isFinishedStartup()) {
                 btnStartStop.setText(container.getResources().getString(R.string.proxy_stop));
             } else {
@@ -82,18 +86,21 @@ public class ProxyFragment extends Fragment {
             txtAddress.setEnabled(false);
             txtPort.setEnabled(false);
 
+            // Setup the listeners for the current screen
             setupListeners(container);
         }
 
+        // Update the preference when the user has finished changing
         txtAddress.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                sharedPreferences.edit().putString("proxy_address", ((TextView) v).getText().toString()).commit();
+                sharedPreferences.edit().putString("proxy_address", ((TextView) v).getText().toString()).apply();
             }
         });
 
+        // Update the preference when the user has finished changing
         txtPort.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                sharedPreferences.edit().putString("proxy_port", ((TextView) v).getText().toString()).commit();
+                sharedPreferences.edit().putString("proxy_port", ((TextView) v).getText().toString()).apply();
             }
         });
 
@@ -115,8 +122,10 @@ public class ProxyFragment extends Fragment {
                 // Clear all the current disable listeners to preserve memory usage
                 ProxyServer.getOnDisableListeners().clear();
 
+                // Setup the listeners for the current screen
                 setupListeners(container);
 
+                // Start the proxy service
                 Intent serviceIntent = new Intent(getContext(), ProxyService.class);
                 ContextCompat.startForegroundService(getContext(), serviceIntent);
             }
@@ -125,29 +134,38 @@ public class ProxyFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Setup the listeners for all the events of the logger and service
+     *
+     * @param container The container to use for getting resources
+     */
     private void setupListeners(ViewGroup container) {
+        // When we have a new log line add it to txtLogs
         ProxyLogger.setListener(line -> {
             if (txtLogs != null) {
+                // If we are in debug then print logs to the console aswell
                 if (BuildConfig.DEBUG) {
                     System.out.println(AndroidUtils.purgeColorCodes(line));
                 }
 
-                getActivity().runOnUiThread(() -> {
+                AndroidUtils.runOnUiThread(getActivity(), () -> {
                     txtLogs.append(AndroidUtils.purgeColorCodes(line) + "\n");
                 });
             }
         });
 
+        // When the server is disabled toggle the button
         ProxyServer.getOnDisableListeners().add(() -> {
-            getActivity().runOnUiThread(() -> {
+            AndroidUtils.runOnUiThread(getActivity(), () -> {
                 btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
                 txtAddress.setEnabled(true);
                 txtPort.setEnabled(true);
             });
         });
 
+        // When the server has started and its failed status
         ProxyService.setListener((failed) -> {
-            getActivity().runOnUiThread(() -> {
+            AndroidUtils.runOnUiThread(getActivity(), () -> {
                 if (failed) {
                     btnStartStop.setText(container.getResources().getString(R.string.proxy_start));
                     btnStartStop.setEnabled(true);
