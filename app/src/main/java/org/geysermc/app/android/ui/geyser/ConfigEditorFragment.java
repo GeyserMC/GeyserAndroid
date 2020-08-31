@@ -240,11 +240,11 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
         } else if (int.class.equals(property.getRawPrimaryType())) {
             newPreference = new EditTextPreference(category.getParent().getContext());
             ((EditTextPreference) newPreference).setOnBindEditTextListener((editText) -> {
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                editText.setSelection(editText.getText().length());
                 try {
                     editText.setText(forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editText.setSelection(editText.getText().length());
             });
         } else {
             newPreference = new EditTextPreference(category.getParent().getContext());
@@ -270,11 +270,16 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
                 preference.setSummary(newValue.toString());
                 configChanged = true;
 
+                Object parsedValue = newValue;
+                if (int.class.equals(property.getRawPrimaryType())) {
+                    parsedValue = Integer.valueOf((String) newValue);
+                }
+
                 // Get the value and force the update
                 try {
                     AnnotatedField field = property.getField();
                     field.fixAccess(true);
-                    field.setValue(parentObject, newValue);
+                    field.setValue(parentObject, parsedValue);
                 } catch (Exception ignored) { }
 
                 return true;
