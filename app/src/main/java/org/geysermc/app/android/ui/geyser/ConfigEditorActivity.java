@@ -28,6 +28,7 @@ package org.geysermc.app.android.ui.geyser;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
@@ -111,8 +112,26 @@ public class ConfigEditorActivity extends AppCompatActivity {
                     super.onBackPressed();
                 }
                 return true;
+            case R.id.action_config_help:
+                AndroidUtils.showURL("https://github.com/GeyserMC/Geyser/wiki/Understanding-the-Config");
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (checkForChanges()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.config, menu);
+        return true;
     }
 
     private boolean checkForChanges() {
@@ -180,13 +199,6 @@ public class ConfigEditorActivity extends AppCompatActivity {
             return false;
         } else {
             return true;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (checkForChanges()) {
-            super.onBackPressed();
         }
     }
 }

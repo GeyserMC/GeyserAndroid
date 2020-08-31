@@ -42,6 +42,7 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeyserAndroidConfiguration extends GeyserJacksonConfiguration {
 
+    @JsonProperty("floodgate-key-file")
     private String floodgateKeyFile;
 
     @JsonIgnore
