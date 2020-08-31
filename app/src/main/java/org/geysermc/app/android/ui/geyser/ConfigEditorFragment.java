@@ -233,7 +233,7 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
         } else if (boolean.class.equals(property.getRawPrimaryType())) {
             newPreference = new SwitchPreference(category.getParent().getContext());
             try {
-                ((SwitchPreference) newPreference).setChecked((boolean) property.getGetter().callOn(parentObject));
+                ((SwitchPreference) newPreference).setChecked((boolean) forceGet(property, parentObject));
             } catch (Exception ignored) {
                 ((SwitchPreference) newPreference).setChecked(true);
             }
@@ -243,14 +243,14 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 editText.setSelection(editText.getText().length());
                 try {
-                    editText.setText(property.getGetter().callOn(parentObject).toString());
+                    editText.setText(forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
             });
         } else {
             newPreference = new EditTextPreference(category.getParent().getContext());
             ((EditTextPreference) newPreference).setOnBindEditTextListener((editText) -> {
                 try {
-                    editText.setText(property.getGetter().callOn(parentObject).toString());
+                    editText.setText(forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
                 editText.setSelection(editText.getText().length());
             });
@@ -261,7 +261,7 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
             // Only set the summary if its not already been set
             if (newPreference.getSummary() == null) {
                 try {
-                    newPreference.setSummary(property.getGetter().callOn(parentObject).toString());
+                    newPreference.setSummary(forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
             }
 
@@ -281,11 +281,24 @@ public class ConfigEditorFragment extends PreferenceFragmentCompat {
             });
 
             newPreference.setTitle(property.getName());
-            newPreference.setKey(property.getName());
+            newPreference.setKey(property.getName() + Math.random()); // Randomise the keys to prevent overlap
             newPreference.setPersistent(false);
 
             // Add the preference to the category
             category.addPreference(newPreference);
         }
+    }
+
+    private Object forceGet(BeanPropertyDefinition property, Object parentObject) {
+        try {
+            // Try get it normally
+            return property.getGetter().callOn(parentObject);
+        } catch (NullPointerException e) {
+            // Force the get
+            property.getField().fixAccess(true);
+            return property.getField().getValue(parentObject);
+        } catch (Exception ignored) { }
+
+        return null;
     }
 }
