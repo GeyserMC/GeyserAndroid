@@ -29,7 +29,6 @@ import android.annotation.SuppressLint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
 
@@ -41,14 +40,11 @@ import lombok.Getter;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeyserAndroidConfiguration extends GeyserJacksonConfiguration {
-
-    @JsonProperty("floodgate-key-file")
-    private String floodgateKeyFile;
-
-    @JsonIgnore
+    
     @SuppressLint("NewApi")
+    @JsonIgnore // This fixes dumps getting a JsonMappingException
     @Override
-    public Path getFloodgateKeyFile() {
-        return Paths.get(floodgateKeyFile);
+    public Path getFloodgateKeyPath() {
+        return Paths.get(getFloodgateKeyFile());
     }
 }

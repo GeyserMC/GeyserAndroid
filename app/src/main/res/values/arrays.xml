@@ -10,7 +10,7 @@
         <item>external</item>
     </string-array>
 
-    <!-- Config Editor Preference -->
+    <!-- Advanced Config Editor Preference -->
     <string-array name="config_editor_entries">
         <item>Pretty</item>
         <item>Raw</item>
@@ -19,5 +19,11 @@
     <string-array name="config_editor_values">
         <item>pretty</item>
         <item>raw</item>
+    </string-array>
+
+    <!-- Simple Config Editor Auth Type -->
+    <string-array name="config_editor_simple_auth_type_entries">
+        <item>Online</item>
+        <item>Offline</item>
     </string-array>
 </resources>

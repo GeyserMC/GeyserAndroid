@@ -144,12 +144,14 @@ public class AndroidUtils {
      * @param ctx Context to create the loader for
      */
     public static void ShowLoader(Context ctx) {
-        if (appLoader == null) {
-            appLoader = new ProgressDialog(ctx);
-            appLoader.setTitle("Loading...");
-            appLoader.setIndeterminate(false);
-            appLoader.setCancelable(true);
+        if (appLoader != null && appLoader.isShowing()) {
+            appLoader.hide();
         }
+
+        appLoader = new ProgressDialog(ctx);
+        appLoader.setTitle("Loading...");
+        appLoader.setIndeterminate(false);
+        appLoader.setCancelable(true);
 
         appLoader.show();
     }

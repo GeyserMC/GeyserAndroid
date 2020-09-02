@@ -48,7 +48,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ConfigEditorActivity extends AppCompatActivity {
+public class ConfigEditorAdvancedActivity extends AppCompatActivity {
 
     private EditText txtConfig;
     private String configText = "Unable to locate config, please start the server first!";
@@ -65,34 +65,30 @@ public class ConfigEditorActivity extends AppCompatActivity {
         showRaw = preferences.getString("geyser_config_editor", "pretty").equals("raw");
 
         // Fetch the stored config file
+        // It should always exist since its generated in ConfigEditorSimpleActivity
         configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
 
         if (showRaw) {
-            setContentView(R.layout.activity_config_editor_raw);
+            setContentView(R.layout.activity_config_editor_advanced_raw);
 
             // Load the config
             txtConfig = findViewById(R.id.txtConfig);
 
-            if (configFile.exists()) {
-                // Enable horizontal scrolling
-                txtConfig.setHorizontallyScrolling(true);
+            // Enable horizontal scrolling
+            txtConfig.setHorizontallyScrolling(true);
 
-                // Get the config file text
-                configText = AndroidUtils.fileToString(configFile);
-                txtConfig.setText(configText);
-            } else {
-                txtConfig.setText(configText);
-                txtConfig.setEnabled(false);
-            }
+            // Get the config file text
+            configText = AndroidUtils.fileToString(configFile);
+            txtConfig.setText(configText);
 
             // Hide the loader
             AndroidUtils.HideLoader();
         } else {
             // Show the pretty editor
-            setContentView(R.layout.activity_config_editor_pretty);
+            setContentView(R.layout.activity_config_editor_advanced_pretty);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings, new ConfigEditorFragment())
+                    .replace(R.id.settings, new ConfigEditorAdvancedFragment())
                     .commit();
         }
 
@@ -166,7 +162,7 @@ public class ConfigEditorActivity extends AppCompatActivity {
             } else {
                 return true;
             }
-        } else if (ConfigEditorFragment.isConfigChanged()) {
+        } else if (ConfigEditorAdvancedFragment.isConfigChanged()) {
             AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
             confirmDialog.setTitle("Save");
             confirmDialog.setMessage("Do you wish to save the config?");
@@ -176,7 +172,7 @@ public class ConfigEditorActivity extends AppCompatActivity {
 
                     // Build and write the updated config yml
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                    mapper.writeValue(configFile, ConfigEditorFragment.getConfiguration());
+                    mapper.writeValue(configFile, ConfigEditorAdvancedFragment.getConfiguration());
 
                     AsteriskSerializer.showSensitive = false;
 

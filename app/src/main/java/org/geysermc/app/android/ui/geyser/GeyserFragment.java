@@ -88,7 +88,7 @@ public class GeyserFragment extends Fragment {
         btnConfig.setOnClickListener(v -> {
             AndroidUtils.ShowLoader(getContext());
 
-            Intent intent = new Intent(getActivity(), ConfigEditorActivity.class);
+            Intent intent = new Intent(getActivity(), ConfigEditorSimpleActivity.class);
             startActivity(intent);
         });
 

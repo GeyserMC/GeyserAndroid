@@ -13,8 +13,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.geyser.ConfigEditorSimpleActivity"></activity>
         <activity
-            android:name=".ui.geyser.ConfigEditorActivity"
+            android:name=".ui.geyser.ConfigEditorAdvancedActivity"
             android:label="@string/action_config_editor" />
         <activity
             android:name=".ui.about.AboutActivity"

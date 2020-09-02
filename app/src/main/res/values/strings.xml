@@ -45,6 +45,14 @@
     <string name="geyser_not_running">Geyser is not currently running!</string>
     <string name="geyser_background_notification">Geyser is running in the background!</string>
 
+    <!-- Simple Config Editor -->
+    <string name="config_editor_simple_address">Address</string>
+    <string name="config_editor_simple_port">Port</string>
+    <string name="config_editor_simple_auth_type">Auth Type</string>
+    <string name="config_editor_simple_advanced">Advanced</string>
+    <string name="config_editor_simple_default_address">test.geysermc.org</string>
+    <string name="config_editor_simple_default_port">25565</string>
+
     <!-- About Screen -->
     <string name="about_credits_title">Credits</string>
     <string name="about_licences_title">Licences</string>

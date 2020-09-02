@@ -51,11 +51,13 @@ public class GeyserAndroidDumpInfo extends BootstrapDumpInfo {
     private class AndroidInfo {
 
         public String androidVersion;
+        public int androidAPIVersion;
         public String deviceManufacturer;
         public String deviceModel;
 
         private AndroidInfo() {
             androidVersion = Build.VERSION.RELEASE;
+            androidAPIVersion = Build.VERSION.SDK_INT;
             deviceManufacturer = Build.MANUFACTURER;
             deviceModel = Build.MODEL;
         }

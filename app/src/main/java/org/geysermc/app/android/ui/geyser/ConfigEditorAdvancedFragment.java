@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 
-public class ConfigEditorFragment extends PreferenceFragmentCompat {
+public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
