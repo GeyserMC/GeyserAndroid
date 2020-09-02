@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 
+import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidConfiguration;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.utils.FileUtils;
@@ -76,34 +77,21 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
         configChanged = false;
 
         configFile = AndroidUtils.getStoragePath(getContext()).resolve("config.yml").toFile();
-        if (configFile.exists()) {
-            try {
-                // Try and parse the config file
-                parseConfig(preferenceScreen, configFile);
 
-                // Hide the loader
-                AndroidUtils.HideLoader();
-            } catch (IOException e) {
-                // Hide the loader
-                AndroidUtils.HideLoader();
+        try {
+            // Try and parse the config file
+            parseConfig(preferenceScreen, configFile);
 
-                // Let the user know the config failed to load
-                new AlertDialog.Builder(getContext())
-                        .setTitle("Config failed to load")
-                        .setMessage("The config failed to load, please reset it manually!")
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            this.getActivity().finish();
-                        })
-                        .show();
-            }
-        } else {
+            // Hide the loader
+            AndroidUtils.HideLoader();
+        } catch (IOException e) {
             // Hide the loader
             AndroidUtils.HideLoader();
 
-            // Let the user know the config doesn't exist
+            // Let the user know the config failed to load
             new AlertDialog.Builder(getContext())
-                    .setTitle("Config missing")
-                    .setMessage("No config has been created, please start the server first!")
+                    .setTitle(getString(R.string.config_editor_advanced_failed_title))
+                    .setMessage(getString(R.string.config_editor_advanced_failed_message))
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         this.getActivity().finish();
                     })
@@ -221,7 +209,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             newPreference.setEnabled(false);
         } else if ("userAuths".equals(property.getName())) {
             newPreference = new Preference(category.getParent().getContext());
-            newPreference.setSummary("Click to edit user auths");
+            newPreference.setSummary(getString(R.string.config_editor_advanced_user_auth_desc));
             newPreference.setOnPreferenceClickListener((preference) -> {
                 new AlertDialog.Builder(getContext())
                         .setTitle("TODO")

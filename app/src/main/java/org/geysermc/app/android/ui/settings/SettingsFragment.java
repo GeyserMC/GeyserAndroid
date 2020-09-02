@@ -50,21 +50,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             if (configFile.exists()) {
                 if (configFile.delete()) {
                     new AlertDialog.Builder(getContext())
-                            .setTitle("Deleted config")
-                            .setMessage("Removed the Geyser config!")
+                            .setTitle(getString(R.string.settings_reset_config_success_title))
+                            .setMessage(getString(R.string.settings_reset_config_success_message))
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 } else {
                     new AlertDialog.Builder(getContext())
-                            .setTitle("Deletion failed")
-                            .setMessage("Failed to remove the Geyser config!")
+                            .setTitle(getString(R.string.settings_reset_config_failed_title))
+                            .setMessage(getString(R.string.settings_reset_config_failed_message))
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 }
             } else {
                 new AlertDialog.Builder(getContext())
-                        .setTitle("Missing config")
-                        .setMessage("The Geyser config file is missing!")
+                        .setTitle(getString(R.string.settings_reset_config_missing_title))
+                        .setMessage(getString(R.string.settings_reset_config_missing_message))
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             }

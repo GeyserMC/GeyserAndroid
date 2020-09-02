@@ -61,8 +61,8 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                 Files.copy(FileUtils.getResource("config.yml"), configFile.toPath());
             } catch (IOException ignored) {
                 new AlertDialog.Builder(this)
-                        .setTitle("Config failed to generate")
-                        .setMessage("The config failed to generate, please reset it via the settings!")
+                        .setTitle(getString(R.string.config_editor_simple_generate_failed_title))
+                        .setMessage(getString(R.string.config_editor_simple_generate_failed_message))
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                             this.finish();
                         })

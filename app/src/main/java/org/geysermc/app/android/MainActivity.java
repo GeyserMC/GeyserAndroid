@@ -136,11 +136,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_website:
-                AndroidUtils.showURL("https://geysermc.org");
+                AndroidUtils.showURL(getString(R.string.app_site));
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
             case R.id.nav_discord:
-                AndroidUtils.showURL("https://discord.geysermc.org");
+                AndroidUtils.showURL(getString(R.string.app_discord));
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
         }

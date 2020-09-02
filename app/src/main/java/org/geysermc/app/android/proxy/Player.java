@@ -106,7 +106,7 @@ public class Player {
         startGamePacket.setWorldTemplateOptionLocked(false);
 
         startGamePacket.setLevelId("");
-        startGamePacket.setLevelName("GeyserMulti");
+        startGamePacket.setLevelName("LAN Proxy");
         startGamePacket.setPremiumWorldTemplateId("");
         startGamePacket.setCurrentTick(0);
         startGamePacket.setEnchantmentSeed(0);

@@ -136,7 +136,7 @@ public class GeyserFragment extends Fragment {
                     } catch (Exception e) {
                         // The command failed let the user know
                         AndroidUtils.runOnUiThread(getActivity(), () -> {
-                            AndroidUtils.showToast(getContext(), "Failed to run command!");
+                            AndroidUtils.showToast(getContext(), getString(R.string.geyser_command_failed));
                         });
                     }
 
