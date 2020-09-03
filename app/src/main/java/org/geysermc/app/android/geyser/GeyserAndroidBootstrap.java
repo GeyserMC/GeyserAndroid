@@ -78,6 +78,7 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
         try {
             File configFile = FileUtils.fileOrCopiedFromResource(getConfigFolder().resolve("config.yml").toFile(), "config.yml", (x) -> x.replaceAll("generateduuid", UUID.randomUUID().toString()));
             geyserConfig = FileUtils.loadConfig(configFile, GeyserAndroidConfiguration.class);
+            geyserConfig.setContext(ctx);
 
             // Set the 'auto' server to the test server
             if (this.geyserConfig.getRemote().getAddress().equalsIgnoreCase("auto")) {

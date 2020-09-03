@@ -26,11 +26,13 @@
 package org.geysermc.app.android.ui.settings;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.AndroidUtils;
@@ -44,8 +46,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-        Preference branchRefresh = (Preference) findPreference("geyser_reset_config");
-        branchRefresh.setOnPreferenceClickListener(preference -> {
+        Preference configReset = findPreference("geyser_reset_config");
+        configReset.setOnPreferenceClickListener(preference -> {
             File configFile = AndroidUtils.getStoragePath(getContext()).resolve("config.yml").toFile();
             if (configFile.exists()) {
                 if (configFile.delete()) {
@@ -65,6 +67,28 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 new AlertDialog.Builder(getContext())
                         .setTitle(getString(R.string.settings_reset_config_missing_title))
                         .setMessage(getString(R.string.settings_reset_config_missing_message))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+            }
+            return true;
+        });
+
+        Preference userAuthsReset = findPreference("geyser_reset_user_auths");
+        userAuthsReset.setOnPreferenceClickListener(preference -> {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+            if (!sharedPreferences.getString("geyser_user_auths", "{}").equals("{}")) {
+                sharedPreferences.edit().putString("geyser_user_auths", "{}").apply();
+
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.settings_reset_user_auths_success_title))
+                        .setMessage(getString(R.string.settings_reset_user_auths_success_message))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+            } else {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.settings_reset_user_auths_missing_title))
+                        .setMessage(getString(R.string.settings_reset_user_auths_missing_message))
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             }

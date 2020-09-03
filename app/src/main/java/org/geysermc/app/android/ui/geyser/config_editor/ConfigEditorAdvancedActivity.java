@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.ui.geyser;
+package org.geysermc.app.android.ui.geyser.config_editor;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;

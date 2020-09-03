@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.geyser.ConfigEditorSimpleActivity">
+    tools:context=".ui.geyser.config_editor.ConfigEditorSimpleActivity">
 
     <TextView
         android:id="@+id/lblAddress"
@@ -24,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="@string/config_editor_simple_default_address"
+        android:hint="@string/default_ip"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="@string/config_editor_simple_default_port"
+        android:hint="@string/default_port_je"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -44,6 +44,7 @@ import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.geyser.GeyserAndroidLogger;
 import org.geysermc.app.android.service.GeyserService;
+import org.geysermc.app.android.ui.geyser.config_editor.ConfigEditorSimpleActivity;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 

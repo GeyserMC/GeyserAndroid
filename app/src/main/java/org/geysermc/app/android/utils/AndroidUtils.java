@@ -36,6 +36,9 @@ import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.geysermc.app.android.MainActivity;
 import org.geysermc.app.android.R;
 
@@ -47,6 +50,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class AndroidUtils {
+
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     private static ProgressDialog appLoader;
 

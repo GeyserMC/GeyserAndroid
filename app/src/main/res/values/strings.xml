@@ -62,6 +62,7 @@
     <string name="config_editor_config_missing">Unable to locate config, please start the server first!</string>
 
     <!-- Simple Config Editor -->
+    <string name="config_editor_simple_title">Simple Config Editor</string>
     <string name="config_editor_simple_address">Address</string>
     <string name="config_editor_simple_port">Port</string>
     <string name="config_editor_simple_auth_type">Auth Type</string>
@@ -70,9 +71,28 @@
     <string name="config_editor_simple_generate_failed_message">The config failed to generate, please reset it via the settings!</string>
 
     <!-- Advanced Config Editor -->
+    <string name="config_editor_advanced_title">Advanced Config Editor</string>
     <string name="config_editor_advanced_failed_title">Config failed to load</string>
     <string name="config_editor_advanced_failed_message">The config failed to load, please reset it manually!</string>
     <string name="config_editor_advanced_user_auth_desc">Click to edit user auths</string>
+
+    <!-- User Auths Editor -->
+    <string name="user_auths_title">User Auths</string>
+    <string name="user_auths_exists_title">User Auths</string>
+    <string name="user_auths_exists_message">User auth already exists for that Xbox username</string>
+    <string name="user_auths_new">New User Auth</string>
+    <string name="user_auths_failed_title">User Auths failed to load</string>
+    <string name="user_auths_failed_message">The user auths failed to load, please reset them manually!</string>
+    <string name="user_auths_save_title">Save</string>
+    <string name="user_auths_save_message">Do you wish to save the user auths?</string>
+    <string name="user_auths_save_save">Save</string>
+    <string name="user_auths_save_failed">Unable to save user auths!</string>
+    <string name="user_auths_save_discard">Discard</string>
+
+    <!-- User Auth Dialog -->
+    <string name="user_auth_dialog_title">User Auth</string>
+    <string name="user_auth_dialog_positive">Save</string>
+    <string name="user_auth_dialog_negative">Cancel</string>
 
     <!-- About Screen -->
     <string name="about_credits_title">Credits</string>
@@ -83,10 +103,15 @@
     <string name="settings_storage">Storage Location</string>
     <string name="settings_config_editor">Config Editor</string>
     <string name="settings_reset_config">Reset Geyser config</string>
+    <string name="settings_reset_user_auths">Reset Geyser user auths</string>
     <string name="settings_reset_config_success_title">Deleted config</string>
     <string name="settings_reset_config_success_message">Removed the Geyser config!</string>
     <string name="settings_reset_config_failed_title">Deletion failed</string>
     <string name="settings_reset_config_failed_message">Failed to remove the Geyser config!</string>
     <string name="settings_reset_config_missing_title">Missing config</string>
     <string name="settings_reset_config_missing_message">The Geyser config file is missing!</string>
+    <string name="settings_reset_user_auths_success_title">Deleted user auths</string>
+    <string name="settings_reset_user_auths_success_message">Cleared the Geyser user auths!</string>
+    <string name="settings_reset_user_auths_missing_title">Missing user auths</string>
+    <string name="settings_reset_user_auths_missing_message">The Geyser user auths are either missing or empty!</string>
 </resources>

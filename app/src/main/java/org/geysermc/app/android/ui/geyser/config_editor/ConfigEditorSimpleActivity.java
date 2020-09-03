@@ -23,15 +23,17 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.ui.geyser;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+package org.geysermc.app.android.ui.geyser.config_editor;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.AndroidUtils;
@@ -50,6 +52,12 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config_editor_simple);
+
+        // Enable the back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Button btnAdvanced = findViewById(R.id.btnAdvanced);
 
@@ -79,5 +87,17 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
         });
 
         AndroidUtils.HideLoader();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // The back button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

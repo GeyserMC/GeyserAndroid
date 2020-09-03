@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         context = this;
 
         setContentView(R.layout.activity_main);
+        setTitle(getString(R.string.menu_home));
 
         // Setup the action bar
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -87,7 +87,7 @@ public class ProxyService extends Service {
         startForeground(NOTIFCATION_ID, notification);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        proxy = new ProxyServer(sharedPreferences.getString("proxy_address", getResources().getString(R.string.proxy_default_ip)), Integer.parseInt(sharedPreferences.getString("proxy_port", getResources().getString(R.string.proxy_default_port))));
+        proxy = new ProxyServer(sharedPreferences.getString("proxy_address", getResources().getString(R.string.default_ip)), Integer.parseInt(sharedPreferences.getString("proxy_port", getResources().getString(R.string.default_port_be))));
         proxy.getOnDisableListeners().add(this::stopSelf);
     }
 

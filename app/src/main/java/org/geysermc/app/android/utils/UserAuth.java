@@ -25,34 +25,16 @@
 
 package org.geysermc.app.android.utils;
 
-/**
- * This class is used to store various interfaces for event listeners
- */
-public class EventListeners {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    /**
-     * This is used for adding a listener to the onDisable method of the {@link org.geysermc.app.android.geyser.GeyserAndroidBootstrap}
-     */
-    public interface OnDisableEventListener {
-        void onDisable();
-    }
-
-    /**
-     * This is used for adding a listener to the log events in both
-     * {@link org.geysermc.app.android.proxy.ProxyLogger} and {@link org.geysermc.app.android.geyser.GeyserAndroidLogger}
-     */
-    public interface LogEventListener {
-        void onLogLine(String line);
-    }
-
-    /**
-     * This is used for when the background service has finished starting
-     */
-    public interface StartedEventListener {
-        void onStarted(boolean failed);
-    }
-
-    public interface UserAuthDialogListener {
-        void applyTexts(String xboxUsername, String javaUsername, String javaPassword);
-    }
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserAuth {
+    private String email;
+    private String password;
 }

@@ -22,6 +22,10 @@
             app:key="geyser_reset_config"
             app:title="@string/settings_reset_config" />
 
+        <Preference
+            app:key="geyser_reset_user_auths"
+            app:title="@string/settings_reset_user_auths" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

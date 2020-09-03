@@ -23,9 +23,10 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.ui.geyser;
+package org.geysermc.app.android.ui.geyser.config_editor;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 
@@ -39,12 +40,12 @@ import androidx.preference.SwitchPreference;
 
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidConfiguration;
+import org.geysermc.app.android.ui.geyser.user_auths.UserAuthsActivity;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.utils.FileUtils;
 
@@ -56,9 +57,9 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 
-public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
+import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
 
     private File configFile;
 
@@ -211,11 +212,11 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             newPreference = new Preference(category.getParent().getContext());
             newPreference.setSummary(getString(R.string.config_editor_advanced_user_auth_desc));
             newPreference.setOnPreferenceClickListener((preference) -> {
-                new AlertDialog.Builder(getContext())
-                        .setTitle("TODO")
-                        .setMessage("Add a user auth edit screen")
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show();
+                AndroidUtils.ShowLoader(getContext());
+
+                Intent intent = new Intent(getContext(), UserAuthsActivity.class);
+                startActivity(intent);
+
                 return true;
             });
         } else if (boolean.class.equals(property.getRawPrimaryType())) {
