@@ -30,6 +30,7 @@ import android.os.Bundle;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import org.geysermc.app.android.BuildConfig;
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.AndroidUtils;
 
@@ -38,14 +39,42 @@ public class AboutFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.about_preferences, rootKey);
+
+        findPreference("version").setSummary(BuildConfig.VERSION_NAME);
     }
 
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         switch (preference.getKey()) {
+            // About
+            case "version":
+                AndroidUtils.setClipboard(getContext(), BuildConfig.VERSION_NAME);
+                AndroidUtils.showToast(getContext(), getString(R.string.about_version_copied));
+                return true;
+
+            // Links
+            case "github":
+                AndroidUtils.showURL("https://github.com/rtm516/GeyserAndroid");
+                return true;
+            case "trello":
+                AndroidUtils.showURL("https://trello.com/b/pPJpl9dZ/geyser-android");
+                return true;
+            case "ci":
+                AndroidUtils.showURL("https://ci.rtm516.co.uk/job/GeyserAndroid/");
+                return true;
+
+            // Credits
+            case "rtm516":
+                AndroidUtils.showURL("https://rtm516.co.uk/");
+                return true;
+            case "arcratist":
+                AndroidUtils.showURL("https://github.com/Arcratist/");
+                return true;
             case "geyser":
                 AndroidUtils.showURL(getString(R.string.app_site));
                 return true;
+
+            // Licences
             case "fontawesome":
                 AndroidUtils.showURL("https://fontawesome.com/license");
                 return true;

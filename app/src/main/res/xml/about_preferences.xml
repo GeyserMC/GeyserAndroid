@@ -1,7 +1,45 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory app:title="@string/about_about_title">
+
+        <Preference
+            app:key="version"
+            app:title="Version"
+            app:summary="" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/about_links_title">
+
+        <Preference
+            app:key="github"
+            app:title="GitHub repo"
+            app:summary="Source code of the app" />
+
+        <Preference
+            app:key="trello"
+            app:title="Trello board"
+            app:summary="The todo list and planned feature list" />
+
+        <Preference
+            app:key="ci"
+            app:title="CI"
+            app:summary="The build server for the app" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/about_credits_title">
+
+        <Preference
+            app:key="rtm516"
+            app:title="rtm516"
+            app:summary="Work on the core porting and base app" />
+
+        <Preference
+            app:key="arcratist"
+            app:title="Arcratist (Brett Smith)"
+            app:summary="Helping debug and support older Android versions" />
 
         <Preference
             app:key="geyser"

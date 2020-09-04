@@ -95,8 +95,11 @@
     <string name="user_auth_dialog_negative">Cancel</string>
 
     <!-- About Screen -->
+    <string name="about_about_title">About</string>
+    <string name="about_links_title">Links</string>
     <string name="about_credits_title">Credits</string>
     <string name="about_licences_title">Licences</string>
+    <string name="about_version_copied">Copied version name to clipboard!</string>
 
     <!-- Settings Screen -->
     <string name="settings_geyser">Geyser</string>

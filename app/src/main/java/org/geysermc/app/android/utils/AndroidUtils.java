@@ -28,6 +28,8 @@ package org.geysermc.app.android.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -182,5 +184,17 @@ public class AndroidUtils {
         if (activity != null) {
             activity.runOnUiThread(action);
         }
+    }
+
+    /**
+     * Set the clipboard text
+     *
+     * @param context Context to use
+     * @param text Text to store
+     */
+    public static void setClipboard(Context context, String text) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Copied Text", text);
+        clipboard.setPrimaryClip(clip);
     }
 }

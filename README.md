@@ -6,6 +6,7 @@
 [![Build Status](https://ci.rtm516.co.uk/job/GeyserAndroid/job/master/badge/icon)](https://ci.rtm516.co.uk/job/GeyserAndroid/job/master/)
 [![Discord](https://img.shields.io/discord/613163671870242838.svg?color=%237289da&label=discord)](http://discord.geysermc.org/)
 [![HitCount](http://hits.dwyl.io/GeyserMC/GeyserAndroid.svg)](http://hits.dwyl.io/GeyserMC/GeyserAndroid)
+[![Trello](https://img.shields.io/badge/trello-geyser--android-blue)](https://trello.com/b/pPJpl9dZ/geyser-android)
 
 Geyser Android is an Android app version of Geyser.
 
