@@ -23,22 +23,18 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.ui.home;
+package org.geysermc.app.android.utils;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class HomeViewModel extends ViewModel {
-
-    private MutableLiveData<String> mText;
-
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserAuth {
+    private String email;
+    private String password;
 }

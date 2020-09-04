@@ -44,7 +44,7 @@ public class AboutFragment extends PreferenceFragmentCompat {
     public boolean onPreferenceTreeClick(Preference preference) {
         switch (preference.getKey()) {
             case "geyser":
-                AndroidUtils.showURL("https://geysermc.org");
+                AndroidUtils.showURL(getString(R.string.app_site));
                 return true;
             case "fontawesome":
                 AndroidUtils.showURL("https://fontawesome.com/license");

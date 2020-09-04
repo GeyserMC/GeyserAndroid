@@ -25,9 +25,7 @@
 
 package org.geysermc.app.android.proxy;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.crypto.factories.DefaultJWSVerifierFactory;
@@ -45,14 +43,14 @@ import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import java.io.IOException;
 import java.security.interfaces.ECPublicKey;
 
+import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
+
 public class PacketHandler implements BedrockPacketHandler {
 
     private BedrockServerSession session;
     private ProxyServer masterServer;
 
     private Player player;
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);;
 
     public PacketHandler(BedrockServerSession session, ProxyServer masterServer) {
         this.session = session;

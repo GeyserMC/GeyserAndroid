@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.ui.geyser;
+package org.geysermc.app.android.ui.geyser.config_editor;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -51,7 +51,7 @@ import java.io.IOException;
 public class ConfigEditorAdvancedActivity extends AppCompatActivity {
 
     private EditText txtConfig;
-    private String configText = "Unable to locate config, please start the server first!";
+    private String configText;
     private File configFile;
     private boolean showRaw;
 
@@ -59,6 +59,8 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        configText = getString(R.string.config_editor_config_missing);
 
         // Get the users editor preference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -135,24 +137,24 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
             // Check if they have changed any values
             if (!configText.equals(txtConfig.getText().toString())) {
                 AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
-                confirmDialog.setTitle("Save");
-                confirmDialog.setMessage("Do you wish to save the config?");
-                confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save", (dialog, id) -> {
+                confirmDialog.setTitle(getString(R.string.config_editor_save_title));
+                confirmDialog.setMessage(getString(R.string.config_editor_save_message));
+                confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.config_editor_save_save), (dialog, id) -> {
                     try {
                         FileWriter configWriter = new FileWriter(configFile);
                         configWriter.write(txtConfig.getText().toString());
                         configWriter.close();
                         this.finish();
                     } catch (IOException e) {
-                        AndroidUtils.showToast(getApplicationContext(), "Unable to write config!");
+                        AndroidUtils.showToast(getApplicationContext(), getString(R.string.config_editor_save_failed));
                     }
                 });
 
-                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Discard", (dialog, id) -> {
+                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.config_editor_save_discard), (dialog, id) -> {
                     this.finish();
                 });
 
-                confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (dialog, id) -> {
+                confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(android.R.string.cancel), (dialog, id) -> {
                     // Do nothing
                 });
 
@@ -164,9 +166,9 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
             }
         } else if (ConfigEditorAdvancedFragment.isConfigChanged()) {
             AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
-            confirmDialog.setTitle("Save");
-            confirmDialog.setMessage("Do you wish to save the config?");
-            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save", (dialog, id) -> {
+            confirmDialog.setTitle(getString(R.string.config_editor_save_title));
+            confirmDialog.setMessage(getString(R.string.config_editor_save_message));
+            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.config_editor_save_save), (dialog, id) -> {
                 try {
                     AsteriskSerializer.showSensitive = true;
 
@@ -178,15 +180,15 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
 
                     this.finish();
                 } catch (IOException e) {
-                    AndroidUtils.showToast(getApplicationContext(), "Unable to write config!");
+                    AndroidUtils.showToast(getApplicationContext(), getString(R.string.config_editor_save_failed));
                 }
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Discard", (dialog, id) -> {
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.config_editor_save_discard), (dialog, id) -> {
                 this.finish();
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (dialog, id) -> {
+            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(android.R.string.cancel), (dialog, id) -> {
                 // Do nothing
             });
 

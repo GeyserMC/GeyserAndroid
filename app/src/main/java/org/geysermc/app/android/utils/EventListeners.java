@@ -51,4 +51,8 @@ public class EventListeners {
     public interface StartedEventListener {
         void onStarted(boolean failed);
     }
+
+    public interface UserAuthDialogListener {
+        void applyTexts(String xboxUsername, String javaUsername, String javaPassword);
+    }
 }

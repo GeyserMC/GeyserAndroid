@@ -26,25 +26,60 @@
 package org.geysermc.app.android.geyser;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeyserAndroidConfiguration extends GeyserJacksonConfiguration {
+
+    @Setter
+    @JsonIgnore
+    private Context context;
     
     @SuppressLint("NewApi")
     @JsonIgnore // This fixes dumps getting a JsonMappingException
     @Override
     public Path getFloodgateKeyPath() {
         return Paths.get(getFloodgateKeyFile());
+    }
+
+    @Override
+    public Map<String, UserAuthenticationInfo> getUserAuths() {
+        Map<String, UserAuthenticationInfo> configValues = super.getUserAuths();
+
+        if (context != null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            TypeReference<HashMap<String, UserAuthenticationInfo>> typeRef = new TypeReference<HashMap<String, UserAuthenticationInfo>>() { };
+
+            String userAuthsPref = sharedPreferences.getString("geyser_user_auths", "{}");
+
+            if ((configValues == null || configValues.size() == 0) && !userAuthsPref.equals("{}")) {
+                try {
+                    return OBJECT_MAPPER.readValue(userAuthsPref, typeRef);
+                } catch (IOException ignored) { }
+            }
+        }
+
+        return configValues;
     }
 }

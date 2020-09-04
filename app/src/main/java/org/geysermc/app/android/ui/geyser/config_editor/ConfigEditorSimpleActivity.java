@@ -23,11 +23,10 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.ui.geyser;
+package org.geysermc.app.android.ui.geyser.config_editor;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceCategory;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -41,6 +40,8 @@ import android.widget.Spinner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import androidx.appcompat.app.ActionBar;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidConfiguration;
@@ -71,6 +72,12 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config_editor_simple);
 
+        // Enable the back button
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         Button btnAdvanced = findViewById(R.id.btnAdvanced);
 
         configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
@@ -81,8 +88,8 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                 Files.copy(FileUtils.getResource("config.yml"), configFile.toPath());
             } catch (IOException ignored) {
                 new AlertDialog.Builder(this)
-                        .setTitle("Config failed to generate")
-                        .setMessage("The config failed to generate, please reset it via the settings!")
+                        .setTitle(getString(R.string.config_editor_simple_generate_failed_title))
+                        .setMessage(getString(R.string.config_editor_simple_generate_failed_message))
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                             this.finish();
                         })
@@ -135,7 +142,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                         case "address":
                             String address = ConfigUtils.forceGet(subProperty, subConfig).toString();
                             if (address.equals("auto")) { // Don't allow auto; it's just going to confuse people
-                                address = "test.geysermc.org";
+                                address = getString(R.string.default_ip);
                             }
                             addressText.setText(address);
                             break;
@@ -165,9 +172,6 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                 if (checkForChanges()) {
                     super.onBackPressed();
                 }
-                return true;
-            case R.id.action_config_help:
-                AndroidUtils.showURL("https://github.com/GeyserMC/Geyser/wiki/Understanding-the-Config");
                 return true;
         }
 

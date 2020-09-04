@@ -28,6 +28,7 @@ package org.geysermc.app.android.geyser;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.command.GeyserCommandManager;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.app.android.utils.EventListeners;
@@ -77,10 +78,11 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
         try {
             File configFile = FileUtils.fileOrCopiedFromResource(getConfigFolder().resolve("config.yml").toFile(), "config.yml", (x) -> x.replaceAll("generateduuid", UUID.randomUUID().toString()));
             geyserConfig = FileUtils.loadConfig(configFile, GeyserAndroidConfiguration.class);
+            geyserConfig.setContext(ctx);
 
             // Set the 'auto' server to the test server
             if (this.geyserConfig.getRemote().getAddress().equalsIgnoreCase("auto")) {
-                geyserConfig.getRemote().setAddress("test.geysermc.org");
+                geyserConfig.getRemote().setAddress(ctx.getString(R.string.default_ip));
             }
         } catch (IOException ex) {
             geyserLogger.severe(LanguageUtils.getLocaleStringLog("geyser.config.failed"), ex);

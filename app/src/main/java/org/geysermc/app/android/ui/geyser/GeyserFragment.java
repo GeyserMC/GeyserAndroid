@@ -44,6 +44,7 @@ import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidBootstrap;
 import org.geysermc.app.android.geyser.GeyserAndroidLogger;
 import org.geysermc.app.android.service.GeyserService;
+import org.geysermc.app.android.ui.geyser.config_editor.ConfigEditorSimpleActivity;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.connector.GeyserConnector;
 
@@ -136,7 +137,7 @@ public class GeyserFragment extends Fragment {
                     } catch (Exception e) {
                         // The command failed let the user know
                         AndroidUtils.runOnUiThread(getActivity(), () -> {
-                            AndroidUtils.showToast(getContext(), "Failed to run command!");
+                            AndroidUtils.showToast(getContext(), getString(R.string.geyser_command_failed));
                         });
                     }
 
