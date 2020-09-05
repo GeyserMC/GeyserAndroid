@@ -31,13 +31,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
@@ -48,6 +47,7 @@ import androidx.appcompat.app.ActionBar;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidConfiguration;
+import org.geysermc.app.android.ui.geyser.user_auths.UserAuthsActivity;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.app.android.utils.ConfigUtils;
 import org.geysermc.connector.common.serializer.AsteriskSerializer;
@@ -65,12 +65,13 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
     private File configFile;
 
     private GeyserAndroidConfiguration configuration;
+
     @Setter
     private static boolean configChanged = false;
 
-    private EditText addressText;
-    private EditText portText;
-    private Spinner authTypeSpinner;
+    private EditText txtAddress;
+    private EditText txtPort;
+    private Spinner dpdAuthType;
 
     @SuppressLint("NewApi")
     @Override
@@ -84,6 +85,10 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        txtAddress = findViewById(R.id.txtAddress);
+        txtPort = findViewById(R.id.txtPort);
+        dpdAuthType = findViewById(R.id.dpdAuthType);
+        Button btnUserAuths = findViewById(R.id.btnUserAuths);
         Button btnAdvanced = findViewById(R.id.btnAdvanced);
 
         configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
@@ -105,9 +110,12 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
             }
         }
 
-        addressText = findViewById(R.id.txtAddress);
-        portText = findViewById(R.id.txtPort);
-        authTypeSpinner = findViewById(R.id.dpdAuthType);
+        btnUserAuths.setOnClickListener(v -> {
+            AndroidUtils.ShowLoader(this);
+
+            Intent intent = new Intent(getApplicationContext(), UserAuthsActivity.class);
+            startActivity(intent);
+        });
 
         btnAdvanced.setOnClickListener(v -> {
             AndroidUtils.ShowLoader(this);
@@ -153,58 +161,39 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                                 configChanged = true; // Since the config technically did change
                                 configuration.getRemote().setAddress(getString(R.string.default_ip));
                             }
-                            addressText.setText(address);
-                            addressText.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                                }
-
-                                @Override
-                                public void afterTextChanged(Editable s) {
+                            txtAddress.setText(address);
+                            txtAddress.setOnFocusChangeListener((v, hasFocus) -> {
+                                if (!hasFocus) {
                                     configChanged = true;
 
-                                    configuration.getRemote().setAddress(s.toString());
+                                    configuration.getRemote().setAddress(((TextView) v).getText().toString());
                                 }
                             });
                             break;
                         case "port":
-                            portText.setText(String.valueOf(configuration.getRemote().getPort()));
-                            portText.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                                }
-
-                                @Override
-                                public void afterTextChanged(Editable s) {
+                            txtPort.setText(String.valueOf(configuration.getRemote().getPort()));
+                            txtPort.setOnFocusChangeListener((v, hasFocus) -> {
+                                if (!hasFocus) {
                                     configChanged = true;
 
-                                    configuration.getRemote().setPort(Integer.parseInt(s.toString()));
+                                    configuration.getRemote().setPort(Integer.parseInt(((TextView) v).getText().toString()));
                                 }
                             });
                             break;
                         case "auth-type":
                             // Create an ArrayAdapter using the string array and a default spinner layout
-                            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                                    R.array.config_editor_simple_auth_type_entries, android.R.layout.simple_spinner_item);
+                            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.config_editor_simple_auth_type_entries, android.R.layout.simple_spinner_item);
+
                             // Specify the layout to use when the list of choices appears
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            authTypeSpinner.setAdapter(adapter);
-                            // Set position based on configuration
-                            authTypeSpinner.setSelection(configuration.getRemote().getAuthType().equals("online") ? 0 : 1);
-                            authTypeSpinner.setOnItemSelectedListener(new AuthTypeListener(configuration));
+                            dpdAuthType.setAdapter(adapter);
 
+                            // Set position based on configuration
+                            dpdAuthType.setSelection(configuration.getRemote().getAuthType().equals("online") ? 0 : 1);
+                            dpdAuthType.setOnItemSelectedListener(new AuthTypeListener(configuration));
+                            break;
+                        default:
+                            break;
                     }
                 } catch (Exception e) { }
             }

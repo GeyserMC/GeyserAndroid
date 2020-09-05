@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 apply plugin: 'com.android.application'
 apply plugin: 'org.anarres.jarjar'
 apply plugin: "com.github.johnrengelman.shadow"
@@ -10,8 +12,8 @@ android {
         applicationId "org.geysermc.app.android"
         minSdkVersion 24 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
         targetSdkVersion 28
-        versionCode 100006 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
-        versionName "1.0.6-BETA"
+        versionCode 100007 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
+        versionName "1.0.7-BETA"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,7 +72,7 @@ repositories {
     mavenCentral()
 }
 
-task nnioJar (type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+task nnioJar (type: ShadowJar) {
     relocate 'org.lukhnos.nnio.file', 'java.nio.file'
     relocate 'org.lukhnos.nnio.channels', 'java.nio.channels'
 
@@ -79,17 +81,17 @@ task nnioJar (type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) 
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.preference:preference:1.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'

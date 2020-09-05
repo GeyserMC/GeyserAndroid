@@ -77,6 +77,19 @@
         app:layout_constraintTop_toBottomOf="@+id/lblAuthType" />
 
     <Button
+        android:id="@+id/btnUserAuths"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/config_editor_simple_user_auths"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dpdAuthType" />
+
+    <Button
         android:id="@+id/btnAdvanced"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -85,6 +98,8 @@
         android:layout_marginEnd="16dp"
         android:text="@string/config_editor_simple_advanced"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dpdAuthType" />
+        app:layout_constraintTop_toBottomOf="@+id/btnUserAuths" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

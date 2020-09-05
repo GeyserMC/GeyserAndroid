@@ -67,6 +67,7 @@
     <string name="config_editor_simple_port">Port</string>
     <string name="config_editor_simple_auth_type">Auth Type</string>
     <string name="config_editor_simple_advanced">Advanced</string>
+    <string name="config_editor_simple_user_auths">User Auths</string>
     <string name="config_editor_simple_generate_failed_title">Config failed to generate</string>
     <string name="config_editor_simple_generate_failed_message">The config failed to generate, please reset it via the settings!</string>
 

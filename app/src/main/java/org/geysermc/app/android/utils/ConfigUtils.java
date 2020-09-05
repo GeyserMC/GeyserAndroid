@@ -63,6 +63,13 @@ public class ConfigUtils {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Get the value of a {@link BeanPropertyDefinition} forces if not directly accessible
+     *
+     * @param property The property to get
+     * @param parentObject The parent to get the property from
+     * @return The value of the property
+     */
     public static Object forceGet(BeanPropertyDefinition property, Object parentObject) {
         try {
             // Try get it normally
@@ -75,5 +82,4 @@ public class ConfigUtils {
 
         return null;
     }
-
 }
