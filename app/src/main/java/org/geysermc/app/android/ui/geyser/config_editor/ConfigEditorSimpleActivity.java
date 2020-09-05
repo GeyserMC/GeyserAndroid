@@ -31,6 +31,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,6 +40,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -55,12 +58,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
+import lombok.Setter;
+
 public class ConfigEditorSimpleActivity extends AppCompatActivity {
 
     private File configFile;
 
     private GeyserAndroidConfiguration configuration;
-    private boolean configChanged = false;
+    @Setter
+    private static boolean configChanged = false;
 
     private EditText addressText;
     private EditText portText;
@@ -81,6 +87,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
         Button btnAdvanced = findViewById(R.id.btnAdvanced);
 
         configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
+        configChanged = false;
 
         if (!configFile.exists()) {
             // Copy the default config from Geyser
@@ -140,22 +147,63 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                     Object subConfig = property.getGetter().callOn(configuration);
                     switch (subProperty.getName()) {
                         case "address":
-                            String address = ConfigUtils.forceGet(subProperty, subConfig).toString();
+                            String address = configuration.getRemote().getAddress();
                             if (address.equals("auto")) { // Don't allow auto; it's just going to confuse people
                                 address = getString(R.string.default_ip);
+                                configChanged = true; // Since the config technically did change
+                                configuration.getRemote().setAddress(getString(R.string.default_ip));
                             }
                             addressText.setText(address);
+                            addressText.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+                                    configChanged = true;
+
+                                    configuration.getRemote().setAddress(s.toString());
+                                }
+                            });
                             break;
                         case "port":
-                            portText.setText(ConfigUtils.forceGet(subProperty, subConfig).toString());
+                            portText.setText(String.valueOf(configuration.getRemote().getPort()));
+                            portText.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+                                    configChanged = true;
+
+                                    configuration.getRemote().setPort(Integer.parseInt(s.toString()));
+                                }
+                            });
                             break;
-                        case "authType":
+                        case "auth-type":
                             // Create an ArrayAdapter using the string array and a default spinner layout
                             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                                     R.array.config_editor_simple_auth_type_entries, android.R.layout.simple_spinner_item);
                             // Specify the layout to use when the list of choices appears
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             authTypeSpinner.setAdapter(adapter);
+                            // Set position based on configuration
+                            authTypeSpinner.setSelection(configuration.getRemote().getAuthType().equals("online") ? 0 : 1);
+                            authTypeSpinner.setOnItemSelectedListener(new AuthTypeListener(configuration));
 
                     }
                 } catch (Exception e) { }
@@ -196,7 +244,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
 
                     // Build and write the updated config yml
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                    mapper.writeValue(configFile, ConfigEditorAdvancedFragment.getConfiguration());
+                    mapper.writeValue(configFile, configuration);
 
                     AsteriskSerializer.showSensitive = false;
 
