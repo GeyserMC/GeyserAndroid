@@ -38,8 +38,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 
@@ -47,17 +45,14 @@ import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.GeyserAndroidConfiguration;
 import org.geysermc.app.android.ui.geyser.user_auths.UserAuthsActivity;
 import org.geysermc.app.android.utils.AndroidUtils;
+import org.geysermc.app.android.utils.ConfigUtils;
 import org.geysermc.connector.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.Getter;
-
-import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
 
 public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
 
@@ -105,14 +100,14 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
         configuration = FileUtils.loadConfig(configFile, GeyserAndroidConfiguration.class);
 
         // Get the available properties from the class
-        List<BeanPropertyDefinition> availableProperties = getPOJOForClass(GeyserAndroidConfiguration.class);
+        List<BeanPropertyDefinition> availableProperties = ConfigUtils.getPOJOForClass(GeyserAndroidConfiguration.class);
 
         // Make the bedrock category
         PreferenceCategory bedrockCategory = new PreferenceCategory(preferenceScreen.getContext());
         bedrockCategory.setTitle("Bedrock");
         preferenceScreen.addPreference(bedrockCategory);
 
-        // Make the bedrock category
+        // Make the remote (Java) category
         PreferenceCategory remoteCategory = new PreferenceCategory(preferenceScreen.getContext());
         remoteCategory.setTitle("Remote");
         preferenceScreen.addPreference(remoteCategory);
@@ -151,7 +146,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
                 }
 
                 // Loop the sub class properties
-                for (BeanPropertyDefinition subProperty : getPOJOForClass(property.getRawPrimaryType())) {
+                for (BeanPropertyDefinition subProperty : ConfigUtils.getPOJOForClass(property.getRawPrimaryType())) {
                     try {
                         Object subConfig = property.getGetter().callOn(configuration);
                         createPreference(currentCategory, subProperty, subConfig);
@@ -163,31 +158,6 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
 
             createPreference(advancedCategory, property, configuration);
         }
-    }
-
-    /**
-     * Get the {@link BeanPropertyDefinition}s for the given class
-     *
-     * @param clazz The class to get the definitions for
-     * @return A list of {@link BeanPropertyDefinition} for the given class
-     */
-    private List<BeanPropertyDefinition> getPOJOForClass(Class<?> clazz) {
-        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructType(clazz);
-
-        // Introspect the given type
-        BeanDescription beanDescription = OBJECT_MAPPER.getSerializationConfig().introspect(javaType);
-
-        // Find properties
-        List<BeanPropertyDefinition> properties = beanDescription.findProperties();
-
-        // Get the ignored properties
-        Set<String> ignoredProperties = OBJECT_MAPPER.getSerializationConfig().getAnnotationIntrospector()
-                .findPropertyIgnorals(beanDescription.getClassInfo()).getIgnored();
-
-        // Filter properties removing the ignored ones
-        return properties.stream()
-                .filter(property -> !ignoredProperties.contains(property.getName()))
-                .collect(Collectors.toList());
     }
 
     /**
@@ -222,7 +192,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
         } else if (boolean.class.equals(property.getRawPrimaryType())) {
             newPreference = new SwitchPreference(category.getParent().getContext());
             try {
-                ((SwitchPreference) newPreference).setChecked((boolean) forceGet(property, parentObject));
+                ((SwitchPreference) newPreference).setChecked((boolean) ConfigUtils.forceGet(property, parentObject));
             } catch (Exception ignored) {
                 ((SwitchPreference) newPreference).setChecked(true);
             }
@@ -230,7 +200,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             newPreference = new EditTextPreference(category.getParent().getContext());
             ((EditTextPreference) newPreference).setOnBindEditTextListener((editText) -> {
                 try {
-                    editText.setText(forceGet(property, parentObject).toString());
+                    editText.setText(ConfigUtils.forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 editText.setSelection(editText.getText().length());
@@ -239,7 +209,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             newPreference = new EditTextPreference(category.getParent().getContext());
             ((EditTextPreference) newPreference).setOnBindEditTextListener((editText) -> {
                 try {
-                    editText.setText(forceGet(property, parentObject).toString());
+                    editText.setText(ConfigUtils.forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
                 editText.setSelection(editText.getText().length());
             });
@@ -250,7 +220,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             // Only set the summary if its not already been set
             if (newPreference.getSummary() == null) {
                 try {
-                    newPreference.setSummary(forceGet(property, parentObject).toString());
+                    newPreference.setSummary(ConfigUtils.forceGet(property, parentObject).toString());
                 } catch (Exception ignored) { }
             }
 
@@ -281,18 +251,5 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             // Add the preference to the category
             category.addPreference(newPreference);
         }
-    }
-
-    private Object forceGet(BeanPropertyDefinition property, Object parentObject) {
-        try {
-            // Try get it normally
-            return property.getGetter().callOn(parentObject);
-        } catch (NullPointerException e) {
-            // Force the get
-            property.getField().fixAccess(true);
-            return property.getField().getValue(parentObject);
-        } catch (Exception ignored) { }
-
-        return null;
     }
 }
