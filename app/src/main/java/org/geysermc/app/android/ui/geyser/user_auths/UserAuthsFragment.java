@@ -89,7 +89,7 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
         preferenceScreen.removeAll();
 
         for (Map.Entry<String, UserAuth> userAuth : userAuths.entrySet()) {
-            Preference authPref = new Preference(preferenceScreen.getContext());
+            AuthPreference authPref = new AuthPreference(preferenceScreen.getContext());
             authPref.setTitle(userAuth.getKey());
             authPref.setSummary(userAuth.getValue().getEmail());
             authPref.setKey(userAuth.getKey());
@@ -117,6 +117,22 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
                 userAuthsDialog.show(getParentFragmentManager(), "user_auth_dialog");
 
                 return true;
+            });
+            authPref.setOnHoldListener(preference -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.user_auths_delete_dialog_title));
+                builder.setMessage(getString(R.string.user_auths_delete_dialog_message));
+                builder.setPositiveButton(getString(R.string.user_auths_delete_dialog_positive), (dialog, which) -> {
+                    changed = true;
+                    dialog.dismiss();
+                    userAuths.remove(userAuth.getKey());
+                    generateUserAuthList(preferenceScreen);
+                });
+                builder.setNegativeButton(getString(R.string.user_auths_delete_dialog_negative), (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             });
 
             preferenceScreen.addPreference(authPref);

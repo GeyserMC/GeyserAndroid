@@ -23,45 +23,36 @@
  * @link https://github.com/GeyserMC/GeyserAndroid
  */
 
-package org.geysermc.app.android.utils;
+package org.geysermc.app.android.ui.geyser.user_auths;
 
-import org.geysermc.app.android.ui.geyser.user_auths.AuthPreference;
+import android.content.Context;
+
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
+
+import org.geysermc.app.android.utils.EventListeners;
+
+import lombok.Setter;
 
 /**
- * This class is used to store various interfaces for event listeners
+ * Implement custom androidx.preference.Preference with long press support.
  */
-public class EventListeners {
+public class AuthPreference extends Preference
+{
+    @Setter
+    private EventListeners.OnHoldListener onHoldListener;
 
-    /**
-     * This is used for adding a listener to the onDisable method of the {@link org.geysermc.app.android.geyser.GeyserAndroidBootstrap}
-     */
-    public interface OnDisableEventListener {
-        void onDisable();
+    public AuthPreference(Context context) {
+        super(context);
     }
 
-    /**
-     * This is used for adding a listener to the log events in both
-     * {@link org.geysermc.app.android.proxy.ProxyLogger} and {@link org.geysermc.app.android.geyser.GeyserAndroidLogger}
-     */
-    public interface LogEventListener {
-        void onLogLine(String line);
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        holder.itemView.setOnLongClickListener(view -> {
+            onHoldListener.onLongClick(this);
+            return true;
+        });
     }
 
-    /**
-     * This is used for when the background service has finished starting
-     */
-    public interface StartedEventListener {
-        void onStarted(boolean failed);
-    }
-
-    public interface UserAuthDialogListener {
-        void applyTexts(String xboxUsername, String javaUsername, String javaPassword);
-    }
-
-    /**
-     * Implement OnHoldListener interface.
-     */
-    public interface OnHoldListener {
-        void onLongClick(AuthPreference preference);
-    }
 }
