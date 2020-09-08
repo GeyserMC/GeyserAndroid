@@ -124,22 +124,16 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
             });
             authPref.setOnHoldListener(preference -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(getString(R.string.user_auth_delete_dialog_title));
-                builder.setMessage(getString(R.string.user_auth_delete_dialog_message));
-                builder.setPositiveButton(getString(R.string.user_auth_delete_dialog_positive), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        changed = true;
-                        dialog.dismiss();
-                        userAuths.remove(userAuth.getKey());
-                        generateUserAuthList(preferenceScreen);
-                    }
+                builder.setTitle(getString(R.string.user_auths_delete_dialog_title));
+                builder.setMessage(getString(R.string.user_auths_delete_dialog_message));
+                builder.setPositiveButton(getString(R.string.user_auths_delete_dialog_positive), (dialog, which) -> {
+                    changed = true;
+                    dialog.dismiss();
+                    userAuths.remove(userAuth.getKey());
+                    generateUserAuthList(preferenceScreen);
                 });
-                builder.setNegativeButton(getString(R.string.user_auth_delete_dialog_negative), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+                builder.setNegativeButton(getString(R.string.user_auths_delete_dialog_negative), (dialog, which) -> {
+                    dialog.dismiss();
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -175,28 +169,5 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
         });
 
         preferenceScreen.addPreference(addAuthPref);
-    }
-    //Implement custom androidx.preference.Preference with long press support.
-    @Setter
-    class AuthPreference extends Preference
-    {
-        private OnHoldListener onHoldListener;
-
-        public AuthPreference(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onBindViewHolder(PreferenceViewHolder holder) {
-            super.onBindViewHolder(holder);
-            holder.itemView.setOnLongClickListener(view -> {
-                onHoldListener.onLongClick(this);
-                return true;
-            });
-        }
-    }
-
-    public interface OnHoldListener {
-        void onLongClick(AuthPreference preference);
     }
 }
