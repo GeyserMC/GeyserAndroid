@@ -25,6 +25,8 @@
 
 package org.geysermc.app.android.utils;
 
+import android.text.Editable;
+
 import org.geysermc.app.android.ui.geyser.user_auths.AuthPreference;
 
 /**
@@ -63,5 +65,12 @@ public class EventListeners {
      */
     public interface OnHoldListener {
         void onLongClick(AuthPreference preference);
+    }
+
+    /**
+     * This is used for running a function after the text has changed in a {@link android.text.TextWatcher}
+     */
+    public interface AfterTextChangeListener {
+        void afterTextChange(Editable editable);
     }
 }

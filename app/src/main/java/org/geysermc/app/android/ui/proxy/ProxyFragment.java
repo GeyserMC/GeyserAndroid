@@ -91,18 +91,14 @@ public class ProxyFragment extends Fragment {
         }
 
         // Update the preference when the user has finished changing
-        txtAddress.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                sharedPreferences.edit().putString("proxy_address", ((TextView) v).getText().toString()).apply();
-            }
-        });
+        txtAddress.addTextChangedListener(AndroidUtils.generateAfterTextChange((editable) -> {
+            sharedPreferences.edit().putString("proxy_address", editable.toString()).apply();
+        }));
 
         // Update the preference when the user has finished changing
-        txtPort.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                sharedPreferences.edit().putString("proxy_port", ((TextView) v).getText().toString()).apply();
-            }
-        });
+        txtPort.addTextChangedListener(AndroidUtils.generateAfterTextChange((editable) -> {
+            sharedPreferences.edit().putString("proxy_port", editable.toString()).apply();
+        }));
 
         btnStartStop.setOnClickListener(v -> {
             Button self = (Button) v;

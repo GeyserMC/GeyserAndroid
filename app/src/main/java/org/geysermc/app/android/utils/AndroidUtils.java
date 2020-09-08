@@ -34,6 +34,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
@@ -196,5 +198,26 @@ public class AndroidUtils {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Copied Text", text);
         clipboard.setPrimaryClip(clip);
+    }
+
+    /**
+     * Generate a {@link TextWatcher} that calls a {@link org.geysermc.app.android.utils.EventListeners.AfterTextChangeListener} after a text change
+     *
+     * @param listener The listener to call
+     * @return The built {@link TextWatcher}
+     */
+    public static TextWatcher generateAfterTextChange(EventListeners.AfterTextChangeListener listener) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (listener != null) listener.afterTextChange(s);
+            }
+        };
     }
 }

@@ -164,23 +164,19 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                                 configuration.getRemote().setAddress(getString(R.string.default_ip));
                             }
                             txtAddress.setText(address);
-                            txtAddress.setOnFocusChangeListener((v, hasFocus) -> {
-                                if (!hasFocus) {
-                                    configChanged = true;
+                            txtAddress.addTextChangedListener(AndroidUtils.generateAfterTextChange((editable) -> {
+                                configChanged = true;
 
-                                    configuration.getRemote().setAddress(((TextView) v).getText().toString());
-                                }
-                            });
+                                configuration.getRemote().setAddress(editable.toString());
+                            }));
                             break;
                         case "port":
                             txtPort.setText(String.valueOf(configuration.getRemote().getPort()));
-                            txtPort.setOnFocusChangeListener((v, hasFocus) -> {
-                                if (!hasFocus) {
-                                    configChanged = true;
+                            txtPort.addTextChangedListener(AndroidUtils.generateAfterTextChange((editable) -> {
+                                configChanged = true;
 
-                                    configuration.getRemote().setPort(Integer.parseInt(((TextView) v).getText().toString()));
-                                }
-                            });
+                                configuration.getRemote().setPort(Integer.parseInt(editable.toString()));
+                            }));
                             break;
                         case "auth-type":
                             // Create an ArrayAdapter using the string array and a default spinner layout
