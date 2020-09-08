@@ -25,6 +25,8 @@
 
 package org.geysermc.app.android.ui.geyser.user_auths;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -33,6 +35,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
+import androidx.preference.PreferenceViewHolder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -45,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
 
@@ -89,7 +93,7 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
         preferenceScreen.removeAll();
 
         for (Map.Entry<String, UserAuth> userAuth : userAuths.entrySet()) {
-            Preference authPref = new Preference(preferenceScreen.getContext());
+            AuthPreference authPref = new AuthPreference(preferenceScreen.getContext());
             authPref.setTitle(userAuth.getKey());
             authPref.setSummary(userAuth.getValue().getEmail());
             authPref.setKey(userAuth.getKey());
@@ -117,6 +121,28 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
                 userAuthsDialog.show(getParentFragmentManager(), "user_auth_dialog");
 
                 return true;
+            });
+            authPref.setOnHoldListener(preference -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.user_auth_delete_dialog_title));
+                builder.setMessage(getString(R.string.user_auth_delete_dialog_message));
+                builder.setPositiveButton(getString(R.string.user_auth_delete_dialog_positive), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        changed = true;
+                        dialog.dismiss();
+                        userAuths.remove(userAuth.getKey());
+                        generateUserAuthList(preferenceScreen);
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.user_auth_delete_dialog_negative), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             });
 
             preferenceScreen.addPreference(authPref);
@@ -149,5 +175,28 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
         });
 
         preferenceScreen.addPreference(addAuthPref);
+    }
+    //Implement custom androidx.preference.Preference with long press support.
+    @Setter
+    class AuthPreference extends Preference
+    {
+        private OnHoldListener onHoldListener;
+
+        public AuthPreference(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onBindViewHolder(PreferenceViewHolder holder) {
+            super.onBindViewHolder(holder);
+            holder.itemView.setOnLongClickListener(view -> {
+                onHoldListener.onLongClick(this);
+                return true;
+            });
+        }
+    }
+
+    public interface OnHoldListener {
+        void onLongClick(AuthPreference preference);
     }
 }
