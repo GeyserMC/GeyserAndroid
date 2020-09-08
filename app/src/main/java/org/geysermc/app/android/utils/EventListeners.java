@@ -25,6 +25,8 @@
 
 package org.geysermc.app.android.utils;
 
+import org.geysermc.app.android.ui.geyser.user_auths.AuthPreference;
+
 /**
  * This class is used to store various interfaces for event listeners
  */
@@ -54,5 +56,12 @@ public class EventListeners {
 
     public interface UserAuthDialogListener {
         void applyTexts(String xboxUsername, String javaUsername, String javaPassword);
+    }
+
+    /**
+     * Implement OnHoldListener interface.
+     */
+    public interface OnHoldListener {
+        void onLongClick(AuthPreference preference);
     }
 }

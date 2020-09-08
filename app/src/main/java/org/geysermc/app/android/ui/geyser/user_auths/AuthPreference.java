@@ -30,12 +30,17 @@ import android.content.Context;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
+import org.geysermc.app.android.utils.EventListeners;
+
+import lombok.Setter;
+
 /**
  * Implement custom androidx.preference.Preference with long press support.
  */
-class AuthPreference extends Preference
+public class AuthPreference extends Preference
 {
-    private OnHoldListener onHoldListener;
+    @Setter
+    private EventListeners.OnHoldListener onHoldListener;
 
     public AuthPreference(Context context) {
         super(context);
@@ -50,14 +55,4 @@ class AuthPreference extends Preference
         });
     }
 
-    public void setOnHoldListener(OnHoldListener onHoldListener) {
-        this.onHoldListener = onHoldListener;
-    }
-
-    /**
-     * Implement OnHoldListener interface.
-     */
-    interface OnHoldListener {
-        void onLongClick(AuthPreference preference);
-    }
 }

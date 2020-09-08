@@ -25,8 +25,6 @@
 
 package org.geysermc.app.android.ui.geyser.user_auths;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -35,7 +33,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.PreferenceViewHolder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -48,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
 
