@@ -92,7 +92,6 @@
     <string name="user_auths_delete_dialog_title">User Auth</string>
     <string name="user_auths_delete_dialog_message">Are you sure you\'d like to delete the selected entry?</string>
     <string name="user_auths_delete_dialog_positive">Delete</string>
-    <string name="user_auths_delete_dialog_negative">Cancel</string>
 
     <!-- User Auth Dialog -->
     <string name="user_auth_dialog_title">User Auth</string>

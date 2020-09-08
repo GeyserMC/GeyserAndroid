@@ -51,6 +51,7 @@ android {
 
     configurations {
         nnio
+        streamsupport
     }
 }
 
@@ -79,6 +80,12 @@ task nnioJar (type: ShadowJar) {
     relocate 'org.lukhnos.nnio.channels', 'java.nio.channels'
 
     configurations = [project.configurations.nnio]
+}
+
+task streamsupportJar (type: ShadowJar) {
+    relocate 'java9.util.concurrent', 'java.util.concurrent'
+
+    configurations = [project.configurations.streamsupport]
 }
 
 dependencies {
@@ -137,6 +144,10 @@ dependencies {
     // Load a remake of nnio to support earlier Android versions
     nnio 'com.github.rtm516:nnio:c7b291f4ca'
     implementation tasks.nnioJar.outputs.files
+
+    // Load streamsupport to support earlier Android versions
+    streamsupport 'net.sourceforge.streamsupport:java9-concurrent-backport:2.0.0'
+    implementation tasks.streamsupportJar.outputs.files
 
     // slf4j port for Android
     implementation 'org.slf4j:slf4j-android:1.7.30'

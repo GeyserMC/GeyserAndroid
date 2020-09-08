@@ -37,8 +37,8 @@ import lombok.Setter;
 /**
  * Implement custom androidx.preference.Preference with long press support.
  */
-public class AuthPreference extends Preference
-{
+public class AuthPreference extends Preference {
+
     @Setter
     private EventListeners.OnHoldListener onHoldListener;
 
@@ -49,6 +49,7 @@ public class AuthPreference extends Preference
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
+
         holder.itemView.setOnLongClickListener(view -> {
             onHoldListener.onLongClick(this);
             return true;

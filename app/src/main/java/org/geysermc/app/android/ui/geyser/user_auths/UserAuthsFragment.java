@@ -119,20 +119,19 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
                 return true;
             });
             authPref.setOnHoldListener(preference -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(getString(R.string.user_auths_delete_dialog_title));
-                builder.setMessage(getString(R.string.user_auths_delete_dialog_message));
-                builder.setPositiveButton(getString(R.string.user_auths_delete_dialog_positive), (dialog, which) -> {
-                    changed = true;
-                    dialog.dismiss();
-                    userAuths.remove(userAuth.getKey());
-                    generateUserAuthList(preferenceScreen);
-                });
-                builder.setNegativeButton(getString(R.string.user_auths_delete_dialog_negative), (dialog, which) -> {
-                    dialog.dismiss();
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.user_auths_delete_dialog_title))
+                        .setMessage(getString(R.string.user_auths_delete_dialog_message))
+                        .setPositiveButton(getString(R.string.user_auths_delete_dialog_positive), (dialog, which) -> {
+                            changed = true;
+                            dialog.dismiss();
+                            userAuths.remove(userAuth.getKey());
+                            generateUserAuthList(preferenceScreen);
+                        })
+                        .setNegativeButton(getString(android.R.string.cancel), (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
             });
 
             preferenceScreen.addPreference(authPref);

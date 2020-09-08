@@ -56,6 +56,7 @@ import org.geysermc.connector.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import lombok.Setter;
@@ -91,13 +92,14 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
         Button btnUserAuths = findViewById(R.id.btnUserAuths);
         Button btnAdvanced = findViewById(R.id.btnAdvanced);
 
-        configFile = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml").toFile();
+        Path configPath = AndroidUtils.getStoragePath(getApplicationContext()).resolve("config.yml");
+        configFile = configPath.toFile();
         configChanged = false;
 
         if (!configFile.exists()) {
             // Copy the default config from Geyser
             try {
-                Files.copy(FileUtils.getResource("config.yml"), configFile.toPath());
+                Files.copy(FileUtils.getResource("config.yml"), configPath);
             } catch (IOException ignored) {
                 new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.config_editor_simple_generate_failed_title))

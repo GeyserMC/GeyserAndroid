@@ -59,7 +59,7 @@ public class EventListeners {
     }
 
     /**
-     * Implement OnHoldListener interface.
+     * This is used for long presses on the {@link AuthPreference}
      */
     public interface OnHoldListener {
         void onLongClick(AuthPreference preference);
