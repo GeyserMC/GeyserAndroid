@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "org.geysermc.app.android"
-        minSdkVersion 24 // This should work for earlier versions (likely 21) when Android Studio 4.1 is out
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 100007 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
         versionName "1.0.7-BETA"
@@ -38,6 +38,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -92,6 +94,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
