@@ -105,7 +105,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.8"
 
     // Remove epoll, kqueue and fastutil from the protocol
-    implementation ("com.nukkitx.protocol:bedrock-v408:2.6.0-SNAPSHOT") {
+    implementation ("com.github.CloudburstMC.Protocol:bedrock-v408:250beb2a94") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.nukkitx.network', module:'common'
         exclude group: 'io.netty', module:'netty-transport-native-epoll'
