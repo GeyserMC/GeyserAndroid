@@ -196,7 +196,7 @@ public class AndroidUtils {
      */
     public static void setClipboard(Context context, String text) {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("Copied Text", text);
+        ClipData clip = ClipData.newPlainText(context.getResources().getString(R.string.utils_copy_success), text);
         clipboard.setPrimaryClip(clip);
     }
 

@@ -53,21 +53,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             if (configFile.exists()) {
                 if (configFile.delete()) {
                     new AlertDialog.Builder(getContext())
-                            .setTitle(getString(R.string.settings_reset_config_success_title))
-                            .setMessage(getString(R.string.settings_reset_config_success_message))
+                            .setTitle(getResources().getString(R.string.settings_reset_config_success_title))
+                            .setMessage(getResources().getString(R.string.settings_reset_config_success_message))
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 } else {
                     new AlertDialog.Builder(getContext())
-                            .setTitle(getString(R.string.settings_reset_config_failed_title))
-                            .setMessage(getString(R.string.settings_reset_config_failed_message))
+                            .setTitle(getResources().getString(R.string.settings_reset_config_failed_title))
+                            .setMessage(getResources().getString(R.string.settings_reset_config_failed_message))
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 }
             } else {
                 new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.settings_reset_config_missing_title))
-                        .setMessage(getString(R.string.settings_reset_config_missing_message))
+                        .setTitle(getResources().getString(R.string.settings_reset_config_missing_title))
+                        .setMessage(getResources().getString(R.string.settings_reset_config_missing_message))
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             }
@@ -82,14 +82,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 sharedPreferences.edit().putString("geyser_user_auths", "{}").apply();
 
                 new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.settings_reset_user_auths_success_title))
-                        .setMessage(getString(R.string.settings_reset_user_auths_success_message))
+                        .setTitle(getResources().getString(R.string.settings_reset_user_auths_success_title))
+                        .setMessage(getResources().getString(R.string.settings_reset_user_auths_success_message))
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             } else {
                 new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.settings_reset_user_auths_missing_title))
-                        .setMessage(getString(R.string.settings_reset_user_auths_missing_message))
+                        .setTitle(getResources().getString(R.string.settings_reset_user_auths_missing_title))
+                        .setMessage(getResources().getString(R.string.settings_reset_user_auths_missing_message))
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             }

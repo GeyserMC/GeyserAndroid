@@ -36,10 +36,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -102,8 +100,8 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                 Files.copy(FileUtils.getResource("config.yml"), configPath);
             } catch (IOException ignored) {
                 new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.config_editor_simple_generate_failed_title))
-                        .setMessage(getString(R.string.config_editor_simple_generate_failed_message))
+                        .setTitle(getResources().getString(R.string.config_editor_simple_generate_failed_title))
+                        .setMessage(getResources().getString(R.string.config_editor_simple_generate_failed_message))
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                             this.finish();
                         })
@@ -130,7 +128,8 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
             parseConfig();
         } catch (IOException e) {
             new AlertDialog.Builder(this)
-                    .setMessage("Failed to read config")
+                    .setTitle(getResources().getString(R.string.config_editor_failed_title))
+                    .setMessage(getResources().getString(R.string.config_editor_failed_message))
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         this.finish();
                     })
@@ -159,9 +158,9 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                         case "address":
                             String address = configuration.getRemote().getAddress();
                             if (address.equals("auto")) { // Don't allow auto; it's just going to confuse people
-                                address = getString(R.string.default_ip);
+                                address = getResources().getString(R.string.default_ip);
                                 configChanged = true; // Since the config technically did change
-                                configuration.getRemote().setAddress(getString(R.string.default_ip));
+                                configuration.getRemote().setAddress(getResources().getString(R.string.default_ip));
                             }
                             txtAddress.setText(address);
                             txtAddress.addTextChangedListener(AndroidUtils.generateAfterTextChange((editable) -> {
@@ -223,9 +222,9 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
     private boolean checkForChanges() {
         if (configChanged) {
             AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
-            confirmDialog.setTitle("Save");
-            confirmDialog.setMessage("Do you wish to save the config?");
-            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save", (dialog, id) -> {
+            confirmDialog.setTitle(getResources().getString(R.string.config_editor_save_title));
+            confirmDialog.setMessage(getResources().getString(R.string.config_editor_save_message));
+            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.config_editor_save_save), (dialog, id) -> {
                 try {
                     AsteriskSerializer.showSensitive = true;
 
@@ -237,15 +236,15 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
 
                     this.finish();
                 } catch (IOException e) {
-                    AndroidUtils.showToast(getApplicationContext(), "Unable to write config!");
+                    AndroidUtils.showToast(getApplicationContext(), getResources().getString(R.string.config_editor_save_failed));
                 }
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Discard", (dialog, id) -> {
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> {
                 this.finish();
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (dialog, id) -> {
+            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                 // Do nothing
             });
 

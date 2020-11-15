@@ -1,0 +1,3 @@
+[submodule "app/src/main/res-locale"]
+	path = app/src/main/res-locale
+	url = https://github.com/GeyserMC/languages.git

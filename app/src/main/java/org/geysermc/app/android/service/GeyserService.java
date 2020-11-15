@@ -76,9 +76,9 @@ public class GeyserService extends Service {
 
         Notification notification = new NotificationCompat.Builder(this, "geyser_channel")
                 .setSmallIcon(R.drawable.ic_menu_geyser)
-                .setContentTitle(getString(R.string.geyser_background_notification))
-                .addAction(R.drawable.ic_notification_logs, getString(R.string.geyser_logs), openLogsPendingIntent)
-                .addAction(R.drawable.ic_menu_manage, getString(R.string.geyser_stop), stopPendingIntent)
+                .setContentTitle(getResources().getString(R.string.geyser_background_notification))
+                .addAction(R.drawable.ic_notification_logs, getResources().getString(R.string.geyser_logs), openLogsPendingIntent)
+                .addAction(R.drawable.ic_menu_manage, getResources().getString(R.string.geyser_stop), stopPendingIntent)
                 .build();
 
         createNotificationChannel();
@@ -127,7 +127,7 @@ public class GeyserService extends Service {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel("geyser_channel", getString(R.string.menu_geyser), NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel("geyser_channel", getResources().getString(R.string.menu_geyser), NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
         }

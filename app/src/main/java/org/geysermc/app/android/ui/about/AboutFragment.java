@@ -49,7 +49,7 @@ public class AboutFragment extends PreferenceFragmentCompat {
             // About
             case "version":
                 AndroidUtils.setClipboard(getContext(), BuildConfig.VERSION_NAME);
-                AndroidUtils.showToast(getContext(), getString(R.string.about_version_copied));
+                AndroidUtils.showToast(getContext(), getResources().getString(R.string.about_version_copied));
                 return true;
 
             // Links
@@ -71,7 +71,7 @@ public class AboutFragment extends PreferenceFragmentCompat {
                 AndroidUtils.showURL("https://github.com/Arcratist/");
                 return true;
             case "geyser":
-                AndroidUtils.showURL(getString(R.string.app_site));
+                AndroidUtils.showURL(getResources().getString(R.string.app_site));
                 return true;
 
             // Licences

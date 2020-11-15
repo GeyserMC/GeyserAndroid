@@ -86,8 +86,8 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
 
             // Let the user know the config failed to load
             new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.config_editor_advanced_failed_title))
-                    .setMessage(getString(R.string.config_editor_advanced_failed_message))
+                    .setTitle(getResources().getString(R.string.config_editor_failed_title))
+                    .setMessage(getResources().getString(R.string.config_editor_failed_message))
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         this.getActivity().finish();
                     })
@@ -104,22 +104,22 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
 
         // Make the bedrock category
         PreferenceCategory bedrockCategory = new PreferenceCategory(preferenceScreen.getContext());
-        bedrockCategory.setTitle("Bedrock");
+        bedrockCategory.setTitle(getResources().getString(R.string.config_editor_advanced_section_bedrock));
         preferenceScreen.addPreference(bedrockCategory);
 
         // Make the remote (Java) category
         PreferenceCategory remoteCategory = new PreferenceCategory(preferenceScreen.getContext());
-        remoteCategory.setTitle("Remote");
+        remoteCategory.setTitle(getResources().getString(R.string.config_editor_advanced_section_remote));
         preferenceScreen.addPreference(remoteCategory);
 
         // Make the advanced category
         PreferenceCategory advancedCategory = new PreferenceCategory(preferenceScreen.getContext());
-        advancedCategory.setTitle("Advanced");
+        advancedCategory.setTitle(getResources().getString(R.string.config_editor_advanced_section_advanced));
         preferenceScreen.addPreference(advancedCategory);
 
         // Make the metrics category
         PreferenceCategory metricsCategory = new PreferenceCategory(preferenceScreen.getContext());
-        metricsCategory.setTitle("Metrics");
+        metricsCategory.setTitle(getResources().getString(R.string.config_editor_advanced_section_metrics));
         preferenceScreen.addPreference(metricsCategory);
 
         for (BeanPropertyDefinition property : availableProperties) {

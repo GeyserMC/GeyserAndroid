@@ -78,9 +78,9 @@ public class ProxyService extends Service {
 
         Notification notification = new NotificationCompat.Builder(this, "proxy_channel")
                 .setSmallIcon(R.drawable.ic_menu_proxy)
-                .setContentTitle(getString(R.string.proxy_background_notification))
-                .addAction(R.drawable.ic_notification_logs, getString(R.string.proxy_logs), openLogsPendingIntent)
-                .addAction(R.drawable.ic_menu_manage, getString(R.string.proxy_stop), stopPendingIntent)
+                .setContentTitle(getResources().getString(R.string.proxy_background_notification))
+                .addAction(R.drawable.ic_notification_logs, getResources().getString(R.string.proxy_logs), openLogsPendingIntent)
+                .addAction(R.drawable.ic_menu_manage, getResources().getString(R.string.proxy_stop), stopPendingIntent)
                 .build();
 
         createNotificationChannel();
@@ -130,7 +130,7 @@ public class ProxyService extends Service {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel("proxy_channel", getString(R.string.menu_proxy), NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel("proxy_channel", getResources().getString(R.string.menu_proxy), NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
         }

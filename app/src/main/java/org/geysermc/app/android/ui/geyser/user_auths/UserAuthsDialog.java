@@ -70,9 +70,9 @@ public class UserAuthsDialog extends AppCompatDialogFragment {
         builder.setView(view);
 
         // Set the title and buttons
-        builder.setTitle(getString(R.string.user_auth_dialog_title))
-                .setNegativeButton(getString(R.string.user_auth_dialog_negative), null)
-                .setPositiveButton(getString((R.string.user_auth_dialog_positive)), (dialog, which) -> {
+        builder.setTitle(getResources().getString(R.string.user_auth_dialog_title))
+                .setNegativeButton(getResources().getString(R.string.user_auth_dialog_negative), null)
+                .setPositiveButton(getResources().getString((R.string.user_auth_dialog_positive)), (dialog, which) -> {
                     if (listener != null) {
                         listener.applyTexts(txtXbox.getText().toString(), txtUser.getText().toString(), txtPass.getText().toString());
                     }

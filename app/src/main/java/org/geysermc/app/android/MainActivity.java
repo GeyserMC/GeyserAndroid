@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         context = this;
 
         setContentView(R.layout.activity_main);
-        setTitle(getString(R.string.menu_home));
+        setTitle(getResources().getString(R.string.menu_home));
 
         // Setup the theme
         String theme = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("theme", "system");
@@ -155,11 +155,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_website:
-                AndroidUtils.showURL(getString(R.string.app_site));
+                AndroidUtils.showURL(getResources().getString(R.string.app_site));
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
             case R.id.nav_discord:
-                AndroidUtils.showURL(getString(R.string.app_discord));
+                AndroidUtils.showURL(getResources().getString(R.string.app_discord));
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
         }

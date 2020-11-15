@@ -60,7 +60,7 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        configText = getString(R.string.config_editor_config_missing);
+        configText = getResources().getString(R.string.config_editor_config_missing);
 
         // Get the users editor preference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -137,24 +137,24 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
             // Check if they have changed any values
             if (!configText.equals(txtConfig.getText().toString())) {
                 AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
-                confirmDialog.setTitle(getString(R.string.config_editor_save_title));
-                confirmDialog.setMessage(getString(R.string.config_editor_save_message));
-                confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.config_editor_save_save), (dialog, id) -> {
+                confirmDialog.setTitle(getResources().getString(R.string.config_editor_save_title));
+                confirmDialog.setMessage(getResources().getString(R.string.config_editor_save_message));
+                confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.config_editor_save_save), (dialog, id) -> {
                     try {
                         FileWriter configWriter = new FileWriter(configFile);
                         configWriter.write(txtConfig.getText().toString());
                         configWriter.close();
                         this.finish();
                     } catch (IOException e) {
-                        AndroidUtils.showToast(getApplicationContext(), getString(R.string.config_editor_save_failed));
+                        AndroidUtils.showToast(getApplicationContext(), getResources().getString(R.string.config_editor_save_failed));
                     }
                 });
 
-                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.config_editor_save_discard), (dialog, id) -> {
+                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> {
                     this.finish();
                 });
 
-                confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(android.R.string.cancel), (dialog, id) -> {
+                confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                     // Do nothing
                 });
 
@@ -166,9 +166,9 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
             }
         } else if (ConfigEditorAdvancedFragment.isConfigChanged()) {
             AlertDialog confirmDialog = new AlertDialog.Builder(this).create();
-            confirmDialog.setTitle(getString(R.string.config_editor_save_title));
-            confirmDialog.setMessage(getString(R.string.config_editor_save_message));
-            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.config_editor_save_save), (dialog, id) -> {
+            confirmDialog.setTitle(getResources().getString(R.string.config_editor_save_title));
+            confirmDialog.setMessage(getResources().getString(R.string.config_editor_save_message));
+            confirmDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.config_editor_save_save), (dialog, id) -> {
                 try {
                     AsteriskSerializer.showSensitive = true;
 
@@ -180,15 +180,15 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
 
                     this.finish();
                 } catch (IOException e) {
-                    AndroidUtils.showToast(getApplicationContext(), getString(R.string.config_editor_save_failed));
+                    AndroidUtils.showToast(getApplicationContext(), getResources().getString(R.string.config_editor_save_failed));
                 }
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.config_editor_save_discard), (dialog, id) -> {
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> {
                 this.finish();
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(android.R.string.cancel), (dialog, id) -> {
+            confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                 // Do nothing
             });
 
