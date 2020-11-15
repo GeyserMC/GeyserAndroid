@@ -121,4 +121,6 @@
     <string name="settings_reset_user_auths_success_message">Cleared the Geyser user auths!</string>
     <string name="settings_reset_user_auths_missing_title">Missing user auths</string>
     <string name="settings_reset_user_auths_missing_message">The Geyser user auths are either missing or empty!</string>
+    <string name="settings_other">Other</string>
+    <string name="settings_theme">Theme</string>
 </resources>

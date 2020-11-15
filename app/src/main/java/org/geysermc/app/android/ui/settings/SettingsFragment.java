@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -93,6 +94,25 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         .show();
             }
             return true;
+        });
+
+        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
+            if (key.equals("theme")) {
+                String theme = sharedPreferences.getString(key, "system");
+                switch (theme) {
+                    case "dark":
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        break;
+
+                    case "light":
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        break;
+
+                    default:
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        break;
+                }
+            }
         });
     }
 }
