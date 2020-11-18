@@ -30,11 +30,14 @@ import com.nukkitx.math.vector.Vector2f;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
+import com.nukkitx.protocol.bedrock.data.AuthoritativeMovementMode;
 import com.nukkitx.protocol.bedrock.data.GamePublishSetting;
 import com.nukkitx.protocol.bedrock.data.GameRuleData;
 import com.nukkitx.protocol.bedrock.data.GameType;
 import com.nukkitx.protocol.bedrock.data.PlayerPermission;
+import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.packet.BiomeDefinitionListPacket;
+import com.nukkitx.protocol.bedrock.packet.CreativeContentPacket;
 import com.nukkitx.protocol.bedrock.packet.LevelChunkPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayStatusPacket;
 import com.nukkitx.protocol.bedrock.packet.SetEntityMotionPacket;
@@ -112,7 +115,7 @@ public class Player {
         startGamePacket.setEnchantmentSeed(0);
         startGamePacket.setMultiplayerCorrelationId("");
 
-        startGamePacket.setBlockPalette(PaletteManger.BLOCK_PALETTE);
+        startGamePacket.setAuthoritativeMovementMode(AuthoritativeMovementMode.CLIENT);
         startGamePacket.setVanillaVersion("*");
         session.sendPacket(startGamePacket);
 
@@ -124,6 +127,11 @@ public class Player {
         data.setData(PaletteManger.EMPTY_LEVEL_CHUNK_DATA);
         data.setCachingEnabled(false);
         session.sendPacket(data);
+
+        // Send a CreativeContentPacket - required for 1.16.100
+        CreativeContentPacket creativeContentPacket = new CreativeContentPacket();
+        creativeContentPacket.setContents(new ItemData[0]);
+        session.sendPacket(creativeContentPacket);
 
         // Send the biomes
         BiomeDefinitionListPacket biomeDefinitionListPacket = new BiomeDefinitionListPacket();
