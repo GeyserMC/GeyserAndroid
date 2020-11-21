@@ -51,7 +51,6 @@ import org.geysermc.connector.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.Getter;
 

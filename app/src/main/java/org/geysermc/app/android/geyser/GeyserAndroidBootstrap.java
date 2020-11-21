@@ -30,6 +30,7 @@ import android.content.Context;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.geyser.command.GeyserCommandManager;
+import org.geysermc.app.android.proxy.ProxyServer;
 import org.geysermc.app.android.utils.AndroidUtils;
 import org.geysermc.app.android.utils.EventListeners;
 import org.geysermc.common.PlatformType;
@@ -49,6 +50,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import lombok.Getter;
 
@@ -74,6 +78,16 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
     @SuppressLint("NewApi")
     public void onEnable() {
         geyserLogger = new GeyserAndroidLogger();
+
+        if (ProxyServer.getInstance() != null && !ProxyServer.getInstance().isShuttingDown()) {
+            geyserLogger.warning(ctx.getResources().getString(R.string.geyser_proxy_running_warn));
+
+            // Delay the disable so the UI plays nice in the app
+            final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+            executorService.scheduleAtFixedRate(this::onDisable, 0, 1, TimeUnit.SECONDS);
+
+            return;
+        }
 
         try {
             File configFile = FileUtils.fileOrCopiedFromResource(getConfigFolder().resolve("config.yml").toFile(), "config.yml", (x) -> x.replaceAll("generateduuid", UUID.randomUUID().toString()));

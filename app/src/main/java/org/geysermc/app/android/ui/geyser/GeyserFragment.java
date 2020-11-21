@@ -96,11 +96,11 @@ public class GeyserFragment extends Fragment {
         btnStartStop.setOnClickListener(v -> {
             Button self = (Button) v;
             if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
-                Intent serviceIntent = new Intent(getContext(), GeyserService.class);
-                requireContext().stopService(serviceIntent);
-
                 self.setText(container.getResources().getString(R.string.geyser_start));
                 btnConfig.setEnabled(true);
+
+                Intent serviceIntent = new Intent(getContext(), GeyserService.class);
+                requireContext().stopService(serviceIntent);
             } else {
                 self.setText(container.getResources().getString(R.string.geyser_starting));
                 self.setEnabled(false);

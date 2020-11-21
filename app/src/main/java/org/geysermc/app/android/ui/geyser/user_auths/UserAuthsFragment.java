@@ -125,9 +125,7 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
                         userAuths.remove(userAuth.getKey());
                         generateUserAuthList(preferenceScreen);
                     })
-                    .setNegativeButton(getResources().getString(android.R.string.cancel), (dialog, which) -> {
-                        dialog.dismiss();
-                    })
+                    .setNegativeButton(getResources().getString(android.R.string.cancel), (dialog, which) -> dialog.dismiss())
                     .show());
 
             preferenceScreen.addPreference(authPref);

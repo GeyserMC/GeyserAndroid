@@ -25,6 +25,8 @@
 
 package org.geysermc.app.android.proxy;
 
+import android.content.Context;
+
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServer;
@@ -32,7 +34,9 @@ import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.v419.Bedrock_v419;
 
+import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.EventListeners;
+import org.geysermc.connector.GeyserConnector;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -44,11 +48,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import lombok.Getter;
-import lombok.NonNull;
 
 public class ProxyServer {
 
@@ -79,17 +79,27 @@ public class ProxyServer {
     private final int port;
 
     @Getter
+    private final Context ctx;
+
+    @Getter
     private static final List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList<>();
 
-    public ProxyServer(String address, int port) {
+    public ProxyServer(String address, int port, Context ctx) {
         this.address = address;
         this.port = port;
+        this.ctx = ctx;
     }
 
     public void onEnable() {
         instance = this;
 
         proxyLogger = new ProxyLogger();
+
+        if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
+            proxyLogger.warning(ctx.getResources().getString(R.string.proxy_geyser_running_warn));
+            onDisable();
+            return;
+        }
 
         this.generalThreadPool = Executors.newScheduledThreadPool(32);
 
@@ -113,14 +123,14 @@ public class ProxyServer {
     }
 
     private void start() {
-        proxyLogger.info("Starting...");
+        proxyLogger.info(ctx.getResources().getString(R.string.proxy_starting) + "...");
 
         InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", 19132);
         bdServer = new BedrockServer(bindAddress);
 
         bdPong = new BedrockPong();
         bdPong.setEdition("MCPE");
-        bdPong.setMotd("LAN Proxy");
+        bdPong.setMotd(ctx.getResources().getString(R.string.menu_proxy));
         bdPong.setPlayerCount(0);
         bdPong.setMaximumPlayerCount(1337);
         bdPong.setGameType("Survival");
@@ -147,16 +157,16 @@ public class ProxyServer {
 
         // Start server up
         bdServer.bind().join();
-        proxyLogger.info("Server started on 0.0.0.0:" + 19132);
+        proxyLogger.info(String.format(ctx.getResources().getString(R.string.proxy_started), "0.0.0.0:19132"));
     }
 
     public void shutdown() {
-        proxyLogger.info("Shutting down!");
+        proxyLogger.info(ctx.getResources().getString(R.string.proxy_shutdown));
         shuttingDown = true;
 
         bdServer.close();
         generalThreadPool.shutdown();
         instance = null;
-        proxyLogger.info("Successfully shutdown!");
+        proxyLogger.info(ctx.getResources().getString(R.string.proxy_shutdown_done));
     }
 }

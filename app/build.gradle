@@ -12,8 +12,8 @@ android {
         applicationId "org.geysermc.app.android"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 102002 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
-        versionName "1.2.2"
+        versionCode 102003 // Format 00.00.000    EG 1.0.1 -> 01.00.001 -> 0100001 -> 100001
+        versionName "1.2.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
