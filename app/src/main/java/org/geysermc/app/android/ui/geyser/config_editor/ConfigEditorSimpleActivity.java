@@ -174,7 +174,12 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                             txtPort.addTextChangedListener(AndroidUtils.generateAfterTextChange((editable) -> {
                                 configChanged = true;
 
-                                configuration.getRemote().setPort(Integer.parseInt(editable.toString()));
+                                // Make sure the port isn't empty and if it is use default
+                                if (editable.toString().isEmpty()) {
+                                    configuration.getRemote().setPort(Integer.parseInt(getResources().getString(R.string.default_port_be)));
+                                } else {
+                                    configuration.getRemote().setPort(Integer.parseInt(editable.toString()));
+                                }
                             }));
                             break;
                         case "auth-type":
