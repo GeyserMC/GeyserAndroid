@@ -42,8 +42,12 @@ public class AuthTypeListener extends Activity implements AdapterView.OnItemSele
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // Set to lower case, then trim
         String authType = parent.getAdapter().getItem(position).toString().toLowerCase().trim();
+
+        if (!authType.equals(configuration.getRemote().getAuthType())) {
+            ConfigEditorSimpleActivity.setConfigChanged(true);
+        }
+
         configuration.getRemote().setAuthType(authType);
-        ConfigEditorSimpleActivity.setConfigChanged(true);
     }
 
     @Override
