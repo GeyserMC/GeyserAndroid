@@ -73,7 +73,7 @@ public class GeyserAndroidConfiguration extends GeyserJacksonConfiguration {
 
             String userAuthsPref = sharedPreferences.getString("geyser_user_auths", "{}");
 
-            if ((configValues == null || configValues.size() == 0) && !userAuthsPref.equals("{}")) {
+            if ((configValues == null || configValues.size() == 0) && !"{}".equals(userAuthsPref)) {
                 try {
                     return OBJECT_MAPPER.readValue(userAuthsPref, typeRef);
                 } catch (IOException ignored) { }

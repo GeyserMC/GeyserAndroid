@@ -1,12 +1,14 @@
 <resources>
-    <string name="app_name">Geyser Android</string>
-    <string name="app_site">https://geysermc.org</string>
-    <string name="app_discord">https://discord.geysermc.org</string>
+    <string name="app_name" translatable="false">Geyser Android</string>
+    <string name="app_site" translatable="false">https://geysermc.org</string>
+    <string name="app_discord" translatable="false">https://discord.geysermc.org</string>
 
-    <string name="nav_header_title">Geyser Android</string>
-    <string name="nav_header_subtitle">geysermc.org</string>
+    <string name="nav_header_title" translatable="false">Geyser Android</string>
+    <string name="nav_header_subtitle" translatable="false">geysermc.org</string>
 
-    <string name="default_ip">test.geysermc.org</string>
-    <string name="default_port_be">19132</string>
-    <string name="default_port_je">25565</string>
+    <string name="default_ip" translatable="false">test.geysermc.org</string>
+    <string name="default_port_be" translatable="false">19132</string>
+    <string name="default_port_je" translatable="false">25565</string>
+
+    <string name="command_char" translatable="false"><![CDATA[>]]></string>
 </resources>

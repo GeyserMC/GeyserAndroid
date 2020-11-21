@@ -64,7 +64,7 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
 
         // Get the users editor preference
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        showRaw = preferences.getString("geyser_config_editor", "pretty").equals("raw");
+        showRaw = "raw".equals(preferences.getString("geyser_config_editor", "pretty"));
 
         // Fetch the stored config file
         // It should always exist since its generated in ConfigEditorSimpleActivity
@@ -150,9 +150,7 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
                     }
                 });
 
-                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> {
-                    this.finish();
-                });
+                confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> this.finish());
 
                 confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                     // Do nothing
@@ -184,9 +182,7 @@ public class ConfigEditorAdvancedActivity extends AppCompatActivity {
                 }
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> {
-                this.finish();
-            });
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> this.finish());
 
             confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                 // Do nothing

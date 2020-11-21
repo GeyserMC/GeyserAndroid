@@ -32,6 +32,7 @@ import lombok.Getter;
  * java.util.Base64 wasn't included until API level 26, so this
  * class redirects the methods used to the android.util.Base64 class.
  */
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class Base64 {
 
     @Getter

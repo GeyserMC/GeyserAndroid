@@ -51,18 +51,14 @@ public class HomeFragment extends Fragment {
         Button btnJoinJE = root.findViewById(R.id.btnJoinJE);
 
         // Get the menu and nav controller
-        Menu menu = ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu();
+        Menu menu = ((NavigationView) requireActivity().findViewById(R.id.nav_view)).getMenu();
         NavController navController = ((NavHostFragment) getParentFragment()).getNavController();
 
         // Setup the join BE button
-        btnJoinBE.setOnClickListener(v -> {
-            NavigationUI.onNavDestinationSelected(menu.findItem(R.id.nav_proxy), navController);
-        });
+        btnJoinBE.setOnClickListener(v -> NavigationUI.onNavDestinationSelected(menu.findItem(R.id.nav_proxy), navController));
 
         // Setup the join JE button
-        btnJoinJE.setOnClickListener(v -> {
-            NavigationUI.onNavDestinationSelected(menu.findItem(R.id.nav_geyser), navController);
-        });
+        btnJoinJE.setOnClickListener(v -> NavigationUI.onNavDestinationSelected(menu.findItem(R.id.nav_geyser), navController));
 
         return root;
     }

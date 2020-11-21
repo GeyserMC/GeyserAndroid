@@ -30,7 +30,6 @@ import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServer;
 import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
-import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
 import com.nukkitx.protocol.bedrock.v419.Bedrock_v419;
 
 import org.geysermc.app.android.utils.EventListeners;
@@ -45,13 +44,16 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import lombok.Getter;
+import lombok.NonNull;
 
 public class ProxyServer {
 
     public static final BedrockPacketCodec CODEC = Bedrock_v419.V419_CODEC;
 
-    private Timer timer;
     private BedrockServer bdServer;
     private BedrockPong bdPong;
 
@@ -71,13 +73,13 @@ public class ProxyServer {
     private final Map<String, Player> players = new HashMap<>();
 
     @Getter
-    private String address;
+    private final String address;
 
     @Getter
-    private int port;
+    private final int port;
 
     @Getter
-    private static List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList();
+    private static final List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList<>();
 
     public ProxyServer(String address, int port) {
         this.address = address;
@@ -85,21 +87,21 @@ public class ProxyServer {
     }
 
     public void onEnable() {
-        this.instance = this;
+        instance = this;
 
         proxyLogger = new ProxyLogger();
 
         this.generalThreadPool = Executors.newScheduledThreadPool(32);
 
         // Start a timer to keep the thread running
-        timer = new Timer();
+        Timer timer = new Timer();
         TimerTask task = new TimerTask() { public void run() { } };
         timer.scheduleAtFixedRate(task, 0L, 1000L);
 
         // Initialise the palettes
         PaletteManger.init();
 
-        start(19132);
+        start();
     }
 
     public void onDisable() {
@@ -110,10 +112,10 @@ public class ProxyServer {
         }
     }
 
-    private void start(int port) {
+    private void start() {
         proxyLogger.info("Starting...");
 
-        InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", port);
+        InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", 19132);
         bdServer = new BedrockServer(bindAddress);
 
         bdPong = new BedrockPong();
@@ -122,7 +124,7 @@ public class ProxyServer {
         bdPong.setPlayerCount(0);
         bdPong.setMaximumPlayerCount(1337);
         bdPong.setGameType("Survival");
-        bdPong.setIpv4Port(port);
+        bdPong.setIpv4Port(19132);
         bdPong.setProtocolVersion(ProxyServer.CODEC.getProtocolVersion());
         bdPong.setVersion(null); // Server tries to connect either way and it looks better
 
@@ -145,7 +147,7 @@ public class ProxyServer {
 
         // Start server up
         bdServer.bind().join();
-        proxyLogger.info("Server started on 0.0.0.0:" + port);
+        proxyLogger.info("Server started on 0.0.0.0:" + 19132);
     }
 
     public void shutdown() {
@@ -154,7 +156,7 @@ public class ProxyServer {
 
         bdServer.close();
         generalThreadPool.shutdown();
-        this.instance = null;
+        instance = null;
         proxyLogger.info("Successfully shutdown!");
     }
 }

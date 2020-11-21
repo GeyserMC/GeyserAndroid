@@ -105,9 +105,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle(getResources().getString(R.string.config_editor_simple_generate_failed_title))
                         .setMessage(getResources().getString(R.string.config_editor_simple_generate_failed_message))
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            this.finish();
-                        })
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> this.finish())
                         .show();
                 return;
             }
@@ -133,9 +131,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle(getResources().getString(R.string.config_editor_failed_title))
                     .setMessage(getResources().getString(R.string.config_editor_failed_message))
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        this.finish();
-                    })
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> this.finish())
                     .show();
             return;
         }
@@ -188,7 +184,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                             if (txtPortWatcher != null) {
                                 txtPort.removeTextChangedListener(txtPortWatcher);
                             }
-                            
+
                             txtPort.setText(String.valueOf(configuration.getRemote().getPort()));
 
                             txtPort.addTextChangedListener(txtPortWatcher = AndroidUtils.generateAfterTextChange((editable) -> {
@@ -219,7 +215,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                         default:
                             break;
                     }
-                } catch (Exception e) { }
+                } catch (Exception ignored) { }
             }
             break;
         }
@@ -227,13 +223,12 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // The back button
-            case android.R.id.home:
-                if (checkForChanges()) {
-                    super.onBackPressed();
-                }
-                return true;
+        // The back button
+        if (item.getItemId() == android.R.id.home) {
+            if (checkForChanges()) {
+                super.onBackPressed();
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -267,9 +262,7 @@ public class ConfigEditorSimpleActivity extends AppCompatActivity {
                 }
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> {
-                this.finish();
-            });
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.config_editor_save_discard), (dialog, id) -> this.finish());
 
             confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                 // Do nothing

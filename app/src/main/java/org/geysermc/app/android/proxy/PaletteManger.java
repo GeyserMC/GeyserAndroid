@@ -77,6 +77,7 @@ public class PaletteManger {
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
         // no-op
     }

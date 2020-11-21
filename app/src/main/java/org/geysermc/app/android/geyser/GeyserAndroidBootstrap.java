@@ -64,7 +64,7 @@ public class GeyserAndroidBootstrap implements GeyserBootstrap {
     private Context ctx;
 
     @Getter
-    private static List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList();
+    private static final List<EventListeners.OnDisableEventListener> onDisableListeners = new ArrayList<>();
 
     public void onEnable(Context ctx) {
         this.ctx = ctx;

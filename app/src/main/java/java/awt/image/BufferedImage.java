@@ -36,6 +36,7 @@ import static android.graphics.Bitmap.Config.ARGB_8888;
  * BufferedImage does not exist on Android.
  * So we implement it based on the Bitmap class.
  */
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class BufferedImage extends RenderedImage {
 
     public static final int TYPE_INT_ARGB = 2;

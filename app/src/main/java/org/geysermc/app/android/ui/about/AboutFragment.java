@@ -48,7 +48,7 @@ public class AboutFragment extends PreferenceFragmentCompat {
         switch (preference.getKey()) {
             // About
             case "version":
-                AndroidUtils.setClipboard(getContext(), BuildConfig.VERSION_NAME);
+                AndroidUtils.setClipboard(requireContext(), BuildConfig.VERSION_NAME);
                 AndroidUtils.showToast(getContext(), getResources().getString(R.string.about_version_copied));
                 return true;
 

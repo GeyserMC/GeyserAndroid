@@ -51,19 +51,19 @@ import static org.geysermc.app.android.utils.AndroidUtils.OBJECT_MAPPER;
 public class UserAuthsFragment extends PreferenceFragmentCompat {
 
     @Getter
-    private static Map<String, UserAuth> userAuths = new HashMap();
+    private static Map<String, UserAuth> userAuths = new HashMap<>();
 
     @Getter
     private static boolean changed = false;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        PreferenceScreen preferenceScreen = getPreferenceManager().createPreferenceScreen(getContext());
+        PreferenceScreen preferenceScreen = getPreferenceManager().createPreferenceScreen(requireContext());
         setPreferenceScreen(preferenceScreen);
 
         changed = false;
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         TypeReference<HashMap<String, UserAuth>> typeRef = new TypeReference<HashMap<String, UserAuth>>() { };
         try {
             userAuths = OBJECT_MAPPER.readValue(sharedPreferences.getString("geyser_user_auths", "{}"), typeRef);
@@ -75,12 +75,10 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
             AndroidUtils.HideLoader();
 
             // Let the user know the user auths failed to load
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setTitle(getResources().getString(R.string.user_auths_failed_title))
                     .setMessage(getResources().getString(R.string.user_auths_failed_message))
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        this.getActivity().finish();
-                    })
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> this.requireActivity().finish())
                     .show();
         }
     }
@@ -118,21 +116,19 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
 
                 return true;
             });
-            authPref.setOnHoldListener(preference -> {
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getResources().getString(R.string.user_auths_delete_dialog_title))
-                        .setMessage(getResources().getString(R.string.user_auths_delete_dialog_message))
-                        .setPositiveButton(getResources().getString(R.string.user_auths_delete_dialog_positive), (dialog, which) -> {
-                            changed = true;
-                            dialog.dismiss();
-                            userAuths.remove(userAuth.getKey());
-                            generateUserAuthList(preferenceScreen);
-                        })
-                        .setNegativeButton(getResources().getString(android.R.string.cancel), (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                        .show();
-            });
+            authPref.setOnHoldListener(preference -> new AlertDialog.Builder(requireContext())
+                    .setTitle(getResources().getString(R.string.user_auths_delete_dialog_title))
+                    .setMessage(getResources().getString(R.string.user_auths_delete_dialog_message))
+                    .setPositiveButton(getResources().getString(R.string.user_auths_delete_dialog_positive), (dialog, which) -> {
+                        changed = true;
+                        dialog.dismiss();
+                        userAuths.remove(userAuth.getKey());
+                        generateUserAuthList(preferenceScreen);
+                    })
+                    .setNegativeButton(getResources().getString(android.R.string.cancel), (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .show());
 
             preferenceScreen.addPreference(authPref);
         }
@@ -151,7 +147,7 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
 
                     generateUserAuthList(preferenceScreen);
                 } else {
-                    new AlertDialog.Builder(getContext())
+                    new AlertDialog.Builder(requireContext())
                             .setTitle(getResources().getString(R.string.user_auths_exists_title))
                             .setMessage(getResources().getString(R.string.user_auths_exists_message))
                             .setPositiveButton(getResources().getString(android.R.string.ok), null)

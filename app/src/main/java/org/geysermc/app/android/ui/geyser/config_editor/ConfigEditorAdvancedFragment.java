@@ -51,12 +51,11 @@ import org.geysermc.connector.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
 
 public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
-
-    private File configFile;
 
     @Getter
     private static GeyserAndroidConfiguration configuration;
@@ -67,12 +66,12 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
     @SuppressLint("NewApi")
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        PreferenceScreen preferenceScreen = getPreferenceManager().createPreferenceScreen(getContext());
+        PreferenceScreen preferenceScreen = getPreferenceManager().createPreferenceScreen(requireContext());
         setPreferenceScreen(preferenceScreen);
 
         configChanged = false;
 
-        configFile = AndroidUtils.getStoragePath(getContext()).resolve("config.yml").toFile();
+        File configFile = AndroidUtils.getStoragePath(requireContext()).resolve("config.yml").toFile();
 
         try {
             // Try and parse the config file
@@ -85,12 +84,10 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
             AndroidUtils.HideLoader();
 
             // Let the user know the config failed to load
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setTitle(getResources().getString(R.string.config_editor_failed_title))
                     .setMessage(getResources().getString(R.string.config_editor_failed_message))
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        this.getActivity().finish();
-                    })
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> this.requireActivity().finish())
                     .show();
         }
     }
@@ -150,7 +147,7 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
                     try {
                         Object subConfig = property.getGetter().callOn(configuration);
                         createPreference(currentCategory, subProperty, subConfig);
-                    } catch (Exception e) { }
+                    } catch (Exception ignored) { }
                 }
 
                 continue;
@@ -216,40 +213,38 @@ public class ConfigEditorAdvancedFragment extends PreferenceFragmentCompat {
         }
 
         // Make sure we set the preference
-        if (newPreference != null) {
-            // Only set the summary if its not already been set
-            if (newPreference.getSummary() == null) {
-                try {
-                    newPreference.setSummary(ConfigUtils.forceGet(property, parentObject).toString());
-                } catch (Exception ignored) { }
+        // Only set the summary if its not already been set
+        if (newPreference.getSummary() == null) {
+            try {
+                newPreference.setSummary(ConfigUtils.forceGet(property, parentObject).toString());
+            } catch (Exception ignored) { }
+        }
+
+        newPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            // Update the preference
+            preference.setSummary(newValue.toString());
+            configChanged = true;
+
+            Object parsedValue = newValue;
+            if (int.class.equals(property.getRawPrimaryType())) {
+                parsedValue = Integer.valueOf((String) newValue);
             }
 
-            newPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                // Update the preference
-                preference.setSummary(newValue.toString());
-                configChanged = true;
+            // Get the value and force the update
+            try {
+                AnnotatedField field = property.getField();
+                field.fixAccess(true);
+                field.setValue(parentObject, parsedValue);
+            } catch (Exception ignored) { }
 
-                Object parsedValue = newValue;
-                if (int.class.equals(property.getRawPrimaryType())) {
-                    parsedValue = Integer.valueOf((String) newValue);
-                }
+            return true;
+        });
 
-                // Get the value and force the update
-                try {
-                    AnnotatedField field = property.getField();
-                    field.fixAccess(true);
-                    field.setValue(parentObject, parsedValue);
-                } catch (Exception ignored) { }
+        newPreference.setTitle(property.getName());
+        newPreference.setKey(property.getName() + Math.random()); // Randomise the keys to prevent overlap
+        newPreference.setPersistent(false);
 
-                return true;
-            });
-
-            newPreference.setTitle(property.getName());
-            newPreference.setKey(property.getName() + Math.random()); // Randomise the keys to prevent overlap
-            newPreference.setPersistent(false);
-
-            // Add the preference to the category
-            category.addPreference(newPreference);
-        }
+        // Add the preference to the category
+        category.addPreference(newPreference);
     }
 }

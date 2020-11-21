@@ -63,13 +63,12 @@ public class UserAuthsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // The back button
-            case android.R.id.home:
-                if (checkForChanges()) {
-                    super.onBackPressed();
-                }
-                return true;
+        // The back button
+        if (item.getItemId() == android.R.id.home) {
+            if (checkForChanges()) {
+                super.onBackPressed();
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -101,9 +100,7 @@ public class UserAuthsActivity extends AppCompatActivity {
                 }
             });
 
-            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.user_auths_save_discard), (dialog, id) -> {
-                this.finish();
-            });
+            confirmDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.user_auths_save_discard), (dialog, id) -> this.finish());
 
             confirmDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(android.R.string.cancel), (dialog, id) -> {
                 // Do nothing
