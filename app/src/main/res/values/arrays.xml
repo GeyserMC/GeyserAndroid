@@ -1,8 +1,8 @@
 <resources>
     <!-- Storage Preference -->
     <string-array name="storage_entries">
-        <item>Internal</item>
-        <item>External</item>
+        <item>@string/settings_storage_internal</item>
+        <item>@string/settings_storage_external</item>
     </string-array>
 
     <string-array name="storage_values">
@@ -12,8 +12,8 @@
 
     <!-- Advanced Config Editor Preference -->
     <string-array name="config_editor_entries">
-        <item>Pretty</item>
-        <item>Raw</item>
+        <item>@string/settings_config_editor_pretty</item>
+        <item>@string/settings_config_editor_raw</item>
     </string-array>
 
     <string-array name="config_editor_values">
@@ -29,9 +29,9 @@
 
     <!-- Dark Theme Preference -->
     <string-array name="theme_entries">
-        <item>Dark</item>
-        <item>Light</item>
-        <item>System</item>
+        <item>@string/settings_theme_dark</item>
+        <item>@string/settings_theme_light</item>
+        <item>@string/settings_theme_system</item>
     </string-array>
 
     <string-array name="theme_values">
