@@ -32,7 +32,7 @@ import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServer;
 import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
-import com.nukkitx.protocol.bedrock.v419.Bedrock_v419;
+import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 
 import org.geysermc.app.android.R;
 import org.geysermc.app.android.utils.EventListeners;
@@ -52,7 +52,7 @@ import lombok.Getter;
 
 public class ProxyServer {
 
-    public static final BedrockPacketCodec CODEC = Bedrock_v419.V419_CODEC;
+    public static final BedrockPacketCodec CODEC = Bedrock_v422.V422_CODEC;
 
     private BedrockServer bdServer;
     private BedrockPong bdPong;
