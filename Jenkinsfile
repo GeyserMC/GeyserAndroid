@@ -15,8 +15,8 @@ pipeline {
             steps {
                 signAndroidApks (
                     apksToSign: '**/*-unsigned.apk',
-                    keyStoreId: 'AndroidKeys',
-                    keyAlias: 'key0',
+                    keyStoreId: 'GeyserAndroidKeys',
+                    keyAlias: 'geyserandroid',
                     archiveSignedApks: true
                 )
             }
