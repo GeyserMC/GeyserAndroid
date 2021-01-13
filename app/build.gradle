@@ -116,7 +116,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.8"
 
     // Remove epoll, kqueue and fastutil from the protocol
-    implementation ("com.github.CloudburstMC.Protocol:bedrock-v422:87d862d69d") {
+    implementation ("com.github.CloudburstMC.Protocol:bedrock-v422:d41b84e86c") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.nukkitx.network', module:'raknet'
         exclude group: 'com.nukkitx.network', module:'common'

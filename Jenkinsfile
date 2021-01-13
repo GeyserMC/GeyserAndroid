@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent 'master'
     tools {
         gradle 'Gradle 6'
         jdk 'Java 8'
