@@ -67,19 +67,19 @@ repositories {
     mavenLocal()
 
     maven {
-        url = uri('https://repo.opencollab.dev/maven-releases/')
+        url 'https://repo.opencollab.dev/maven-releases/'
     }
 
     maven {
-        url = uri('https://repo.opencollab.dev/maven-snapshots/')
+        url 'https://repo.opencollab.dev/maven-snapshots/'
     }
 
     maven {
-        url = uri('https://jitpack.io')
+        url 'https://jitpack.io'
     }
 
     maven {
-        url = uri('https://oss.sonatype.org/content/repositories/snapshots/')
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 
     mavenCentral()
