@@ -1,0 +1,9 @@
+Geyser is a proxy, bridging the gap between Minecraft: Bedrock Edition and
+Minecraft: Java Edition servers. The ultimate goal of this project is to allow
+Minecraft: Bedrock Edition users to join Minecraft: Java Edition servers as
+seamlessly as possible. Please note, this project is still a work in progress
+and should not be used on production. Expect bugs!
+
+This app requires an existing copy of Minecraft: Bedrock Edition on any
+platform. You need a paid copy of Minecraft: Java Edition to join online mode
+Java servers.
