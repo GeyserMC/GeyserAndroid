@@ -54,13 +54,13 @@ public class AboutFragment extends PreferenceFragmentCompat {
 
             // Links
             case "github":
-                AndroidUtils.showURL("https://github.com/rtm516/GeyserAndroid");
+                AndroidUtils.showURL("https://github.com/GeyserMC/GeyserAndroid");
                 return true;
             case "trello":
                 AndroidUtils.showURL("https://trello.com/b/pPJpl9dZ/geyser-android");
                 return true;
             case "ci":
-                AndroidUtils.showURL("https://ci.rtm516.co.uk/job/GeyserAndroid/");
+                AndroidUtils.showURL("https://ci.opencollab.dev/job/GeyserMC/job/GeyserAndroid/");
                 return true;
 
             // Credits

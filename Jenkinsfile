@@ -12,6 +12,10 @@ pipeline {
         booleanParam(defaultValue: false, description: 'Skip Discord notification', name: 'SKIP_DISCORD')
     }
 
+    options {
+        buildDiscarder(logRotator(artifactNumToKeepStr: '20'))
+    }
+
     stages {
         stage ('Build') {
             steps {
