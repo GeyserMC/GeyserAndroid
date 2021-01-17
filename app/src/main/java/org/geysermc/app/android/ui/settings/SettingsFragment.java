@@ -28,6 +28,9 @@ package org.geysermc.app.android.ui.settings;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,12 +38,30 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import com.android.volley.ClientError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+
 import org.geysermc.app.android.R;
+import org.geysermc.app.android.utils.AndroidDeviceDump;
 import org.geysermc.app.android.utils.AndroidUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String DUMP_URL = "https://dump.geysermc.org/";
 
     @SuppressLint("NewApi")
     @Override
@@ -93,6 +114,76 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             }
+            return true;
+        });
+
+        // Handle the dump creation prefrence
+        Preference createDeviceDump = findPreference("create_device_dump");
+        createDeviceDump.setOnPreferenceClickListener(preference -> {
+            try {
+                // Let the user know we started
+                AndroidUtils.showToast(getContext(), getResources().getString(R.string.settings_create_device_dump_uploading), Toast.LENGTH_LONG);
+
+                // Dump the device info to JSON
+                JSONObject data = new JSONObject(MAPPER.writeValueAsString(new AndroidDeviceDump(getContext())));
+
+                // Create the request
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, DUMP_URL + "documents", data, response -> {
+                        try {
+                            // Check if we got a response key
+                            if (!response.has("key")) {
+                                new AlertDialog.Builder(getContext())
+                                    .setTitle(getResources().getString(R.string.settings_create_device_dump_failed_title))
+                                    .setMessage(getResources().getString(R.string.settings_create_device_dump_failed_message, (response.has("message") ? response.getString("message") : response.toString())))
+                                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                                    .show();
+                            }
+
+                            String uploadedDumpUrl = DUMP_URL + response.getString("key");
+
+                            final EditText input = new EditText(getContext());
+                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+                            input.setText(uploadedDumpUrl);
+
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle(getResources().getString(R.string.settings_create_device_dump_success_title))
+                                    .setView(input)
+                                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                                    .setNegativeButton(getResources().getString(R.string.settings_create_device_dump_open), (dialog, which) -> {
+                                        AndroidUtils.showURL(uploadedDumpUrl);
+                                    })
+                                    .show();
+                        } catch (JSONException e) {
+                            new AlertDialog.Builder(getContext())
+                                .setTitle(getResources().getString(R.string.settings_create_device_dump_failed_title))
+                                .setMessage(getResources().getString(R.string.settings_create_device_dump_failed_message, e.getMessage()))
+                                .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                                .show();
+                        }
+                }, error -> {
+                    String message = error.getMessage();
+                    try {
+                        JSONObject response = new JSONObject(new String(((ClientError) error).networkResponse.data));
+                        message = response.getString("message");
+                    } catch (JSONException ignored) { }
+
+                    new AlertDialog.Builder(getContext())
+                        .setTitle(getResources().getString(R.string.settings_create_device_dump_failed_title))
+                        .setMessage(getResources().getString(R.string.settings_create_device_dump_failed_message, message))
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                        .show();
+                });
+
+                RequestQueue queue = Volley.newRequestQueue(getContext());
+                queue.add(jsonObjectRequest);
+            } catch (JsonProcessingException | JSONException e) {
+                new AlertDialog.Builder(getContext())
+                    .setTitle(getResources().getString(R.string.settings_create_device_dump_failed_title))
+                    .setMessage(getResources().getString(R.string.settings_create_device_dump_failed_message, e.getMessage()))
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                    .show();
+            }
+
             return true;
         });
 

@@ -44,6 +44,7 @@ import com.nukkitx.protocol.bedrock.packet.SetEntityMotionPacket;
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket;
 import com.nukkitx.protocol.bedrock.packet.TransferPacket;
 
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import lombok.Getter;
@@ -156,9 +157,13 @@ public class Player {
     public void connectToServer(String address, int port) {
         ProxyServer.getInstance().getProxyLogger().info("Sending server transfer packet to " + displayName);
 
+        // Create an InetSocketAddress to reduce issues with hostnames for PS4
+        // Thanks Extollite
+        InetSocketAddress socketAddress = new InetSocketAddress(address, port);
+
         TransferPacket transferPacket = new TransferPacket();
-        transferPacket.setAddress(address);
-        transferPacket.setPort(port);
+        transferPacket.setAddress(socketAddress.getAddress().getHostAddress());
+        transferPacket.setPort(socketAddress.getPort());
         session.sendPacket(transferPacket);
     }
 }

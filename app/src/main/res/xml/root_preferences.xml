@@ -30,6 +30,10 @@
 
     <PreferenceCategory app:title="@string/settings_other">
 
+        <Preference
+            app:key="create_device_dump"
+            app:title="@string/settings_create_device_dump" />
+
         <ListPreference
             app:defaultValue="system"
             app:entries="@array/theme_entries"
