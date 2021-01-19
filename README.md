@@ -12,5 +12,3 @@ Geyser Android is an Android app version of Geyser.
 
 ## What is Geyser Android?
 Geyser Android is an Android app that supports a proxy server and running Geyser.
-
-**Please note, this project is still a work in progress and should not be used on production. Expect bugs!**

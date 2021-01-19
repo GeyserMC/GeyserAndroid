@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="org.geysermc.app.android.ui.home.HomeFragment"
+        android:name="org.geysermc.geyser.android.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_proxy"
-        android:name="org.geysermc.app.android.ui.proxy.ProxyFragment"
+        android:name="org.geysermc.geyser.android.ui.proxy.ProxyFragment"
         android:label="@string/menu_proxy"
         tools:layout="@layout/fragment_proxy" />
 
     <fragment
         android:id="@+id/nav_geyser"
-        android:name="org.geysermc.app.android.ui.geyser.GeyserFragment"
+        android:name="org.geysermc.geyser.android.ui.geyser.GeyserFragment"
         android:label="@string/menu_geyser"
         tools:layout="@layout/fragment_geyser" />
 </navigation>
