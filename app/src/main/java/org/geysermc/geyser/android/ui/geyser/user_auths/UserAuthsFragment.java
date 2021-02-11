@@ -96,7 +96,8 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
                 userAuthsDialog.setXboxUsername(userAuth.getKey());
                 userAuthsDialog.setJavaUsername(userAuth.getValue().getEmail());
                 userAuthsDialog.setJavaPassword(userAuth.getValue().getPassword());
-                userAuthsDialog.setListener((xboxUsername, javaUsername, javaPassword) -> {
+                userAuthsDialog.setMicrosoftAccount(userAuth.getValue().isMicrosoftAccount());
+                userAuthsDialog.setListener((xboxUsername, javaUsername, javaPassword, microsoftAccount) -> {
                     changed = true;
 
                     preference.setTitle(xboxUsername);
@@ -104,12 +105,13 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
 
                     if (!xboxUsername.equals(userAuth.getKey())) {
                         userAuths.remove(userAuth.getKey());
-                        userAuths.put(xboxUsername, new UserAuth(javaUsername, javaPassword));
+                        userAuths.put(xboxUsername, new UserAuth(javaUsername, javaPassword, microsoftAccount));
 
                         generateUserAuthList(preferenceScreen);
                     } else {
                         userAuth.getValue().setEmail(javaUsername);
                         userAuth.getValue().setPassword(javaPassword);
+                        userAuth.getValue().setMicrosoftAccount(microsoftAccount);
                     }
                 });
                 userAuthsDialog.show(getParentFragmentManager(), "user_auth_dialog");
@@ -137,11 +139,11 @@ public class UserAuthsFragment extends PreferenceFragmentCompat {
         addAuthPref.setKey("add_auth");
         addAuthPref.setOnPreferenceClickListener(preference -> {
             UserAuthsDialog userAuthsDialog = new UserAuthsDialog();
-            userAuthsDialog.setListener((xboxUsername, javaUsername, javaPassword) -> {
+            userAuthsDialog.setListener((xboxUsername, javaUsername, javaPassword, microsoftAccount) -> {
                 if (!userAuths.containsKey(xboxUsername)) {
                     changed = true;
 
-                    userAuths.put(xboxUsername, new UserAuth(javaUsername, javaPassword));
+                    userAuths.put(xboxUsername, new UserAuth(javaUsername, javaPassword, microsoftAccount));
 
                     generateUserAuthList(preferenceScreen);
                 } else {

@@ -57,7 +57,7 @@ public class EventListeners {
     }
 
     public interface UserAuthDialogListener {
-        void applyTexts(String xboxUsername, String javaUsername, String javaPassword);
+        void applyTexts(String xboxUsername, String javaUsername, String javaPassword, boolean microsoftAccount);
     }
 
     /**

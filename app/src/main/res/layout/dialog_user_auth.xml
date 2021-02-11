@@ -32,4 +32,11 @@
         android:hint="@string/user_auth_dialog_java_password"
         android:inputType="textPassword"
         android:autofillHints="password" />
+
+    <Switch
+        android:id="@+id/swMicrosoft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtPass"
+        android:text="@string/user_auth_dialog_microsoft" />
 </RelativeLayout>

@@ -25,6 +25,8 @@
 
 package org.geysermc.geyser.android.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,4 +39,6 @@ import lombok.Setter;
 public class UserAuth {
     private String email;
     private String password;
+    @JsonProperty("microsoft-account")
+    private boolean microsoftAccount = false;
 }

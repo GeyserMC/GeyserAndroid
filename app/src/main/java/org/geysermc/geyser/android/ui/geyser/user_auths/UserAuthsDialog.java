@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +47,7 @@ public class UserAuthsDialog extends AppCompatDialogFragment {
     private EditText txtXbox;
     private EditText txtUser;
     private EditText txtPass;
+    private Switch swMicrosoft;
 
     @Setter
     private String xboxUsername = "";
@@ -57,6 +59,9 @@ public class UserAuthsDialog extends AppCompatDialogFragment {
     private String javaPassword = "";
 
     @Setter
+    private boolean microsoftAccount = false;
+
+    @Setter
     private EventListeners.UserAuthDialogListener listener;
 
     @NonNull
@@ -66,7 +71,7 @@ public class UserAuthsDialog extends AppCompatDialogFragment {
 
         // Set the dialog layout
         LayoutInflater inflater = getLayoutInflater();
-        View view =inflater.inflate(R.layout.dialog_user_auth, null);
+        View view = inflater.inflate(R.layout.dialog_user_auth, null);
         builder.setView(view);
 
         // Set the title and buttons
@@ -74,7 +79,7 @@ public class UserAuthsDialog extends AppCompatDialogFragment {
                 .setNegativeButton(getResources().getString(R.string.user_auth_dialog_negative), null)
                 .setPositiveButton(getResources().getString((R.string.user_auth_dialog_positive)), (dialog, which) -> {
                     if (listener != null) {
-                        listener.applyTexts(txtXbox.getText().toString(), txtUser.getText().toString(), txtPass.getText().toString());
+                        listener.applyTexts(txtXbox.getText().toString(), txtUser.getText().toString(), txtPass.getText().toString(), swMicrosoft.isChecked());
                     }
                 });
 
@@ -86,6 +91,9 @@ public class UserAuthsDialog extends AppCompatDialogFragment {
 
         txtPass = view.findViewById(R.id.txtPass);
         txtPass.setText(javaPassword);
+
+        swMicrosoft = view.findViewById(R.id.swMicrosoft);
+        swMicrosoft.setChecked(microsoftAccount);
 
         return builder.create();
     }
