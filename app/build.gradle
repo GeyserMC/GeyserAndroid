@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 apply plugin: 'com.android.application'
+apply plugin: 'org.anarres.jarjar'
 apply plugin: "com.github.johnrengelman.shadow"
 
 android {
@@ -129,8 +130,25 @@ dependencies {
     implementation 'com.nukkitx.network:common:1.6.26-20210217.205834-2'
     implementation 'com.nukkitx.network:raknet:1.6.26-20210217.205834-2'
 
+    // Implement the cleaned fastutil manually to prevent the error on release builds
+    implementation files("${buildDir}/jarjar/fastutil-cleaned.jar") { builtBy 'jarjar-repackage_fastutil-cleaned.jar' }
+
+    // Remove the duplicate classes and include fastutil-common
+    compileOnly jarjar.repackage('fastutil-cleaned.jar') {
+        from 'com.nukkitx.fastutil:fastutil-common:8.3.1'
+
+        classDelete "it.unimi.dsi.fastutil.ints.IntIterator"
+        classDelete "it.unimi.dsi.fastutil.longs.LongIterator"
+        classDelete "it.unimi.dsi.fastutil.objects.ObjectIterator"
+        classDelete "it.unimi.dsi.fastutil.booleans.BooleanIterator"
+        classDelete "it.unimi.dsi.fastutil.bytes.ByteIterator"
+        classDelete "it.unimi.dsi.fastutil.doubles.DoubleIterator"
+        classDelete "it.unimi.dsi.fastutil.floats.FloatIterator"
+    }
+
     // Core Geyser
     implementation ('org.geysermc:connector:1.2.0-SNAPSHOT') {
+        exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.github.CloudburstMC.Network', module:'common'
         exclude group: 'com.github.CloudburstMC.Network', module:'raknet'
         exclude group: 'io.netty', module:'netty-transport-native-epoll'
