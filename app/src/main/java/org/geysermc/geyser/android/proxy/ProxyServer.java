@@ -32,7 +32,7 @@ import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServer;
 import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
-import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
+import com.nukkitx.protocol.bedrock.v428.Bedrock_v428;
 
 import org.geysermc.geyser.android.R;
 import org.geysermc.geyser.android.utils.EventListeners;
@@ -52,7 +52,7 @@ import lombok.Getter;
 
 public class ProxyServer {
 
-    public static final BedrockPacketCodec CODEC = Bedrock_v422.V422_CODEC;
+    public static final BedrockPacketCodec CODEC = Bedrock_v428.V428_CODEC;
 
     private BedrockServer bdServer;
     private BedrockPong bdPong;
@@ -131,12 +131,13 @@ public class ProxyServer {
         bdPong = new BedrockPong();
         bdPong.setEdition("MCPE");
         bdPong.setMotd(ctx.getResources().getString(R.string.menu_proxy));
+        bdPong.setSubMotd(ctx.getResources().getString(R.string.menu_proxy));
         bdPong.setPlayerCount(0);
         bdPong.setMaximumPlayerCount(1337);
         bdPong.setGameType("Survival");
         bdPong.setIpv4Port(19132);
         bdPong.setProtocolVersion(ProxyServer.CODEC.getProtocolVersion());
-        bdPong.setVersion(null); // Server tries to connect either way and it looks better
+        bdPong.setVersion(ProxyServer.CODEC.getMinecraftVersion());
 
         bdServer.setHandler(new BedrockServerEventHandler() {
             @Override
