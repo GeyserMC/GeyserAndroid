@@ -118,7 +118,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.10.2"
 
     // Remove epoll, kqueue and fastutil from the protocol
-    implementation ("com.github.CloudburstMC.Protocol:bedrock-v428:42da92f") {
+    implementation ("com.nukkitx.protocol:bedrock-v428:2.6.2-20210305.180055-6") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.nukkitx.network', module:'raknet'
         exclude group: 'com.nukkitx.network', module:'common'
@@ -153,6 +153,8 @@ dependencies {
         exclude group: 'com.github.CloudburstMC.Network', module:'raknet'
         exclude group: 'io.netty', module:'netty-transport-native-epoll'
         exclude group: 'io.netty', module:'netty-transport-native-kqueue'
+        exclude group: 'com.github.CloudburstMC.Protocol'
+        exclude group: 'com.nukkitx.protocol'
     }
 
     // Load a remake of nnio to support earlier Android versions
