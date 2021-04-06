@@ -118,7 +118,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.10.2"
 
     // Remove epoll, kqueue and fastutil from the protocol
-    implementation ("com.nukkitx.protocol:bedrock-v428:2.6.2-20210305.180055-6") {
+    implementation ("com.github.CloudburstMC.Protocol:f8ecf54") {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.nukkitx.network', module:'raknet'
         exclude group: 'com.nukkitx.network', module:'common'
@@ -147,7 +147,7 @@ dependencies {
     }
 
     // Core Geyser
-    implementation ('org.geysermc:connector:1.2.0-SNAPSHOT') {
+    implementation ('org.geysermc:connector:1.2.1-SNAPSHOT') {
         exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
         exclude group: 'com.github.CloudburstMC.Network', module:'common'
         exclude group: 'com.github.CloudburstMC.Network', module:'raknet'
