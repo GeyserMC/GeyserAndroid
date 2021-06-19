@@ -12,10 +12,6 @@
             android:id="@+id/nav_proxy"
             android:icon="@drawable/ic_menu_proxy"
             android:title="@string/menu_proxy" />
-        <item
-            android:id="@+id/nav_geyser"
-            android:icon="@drawable/ic_menu_geyser"
-            android:title="@string/menu_geyser" />
     </group>
     <group android:checkableBehavior="single">
         <item

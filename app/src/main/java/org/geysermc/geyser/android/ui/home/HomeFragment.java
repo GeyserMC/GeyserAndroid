@@ -48,7 +48,6 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         Button btnJoinBE = root.findViewById(R.id.btnJoinBE);
-        Button btnJoinJE = root.findViewById(R.id.btnJoinJE);
 
         // Get the menu and nav controller
         Menu menu = ((NavigationView) requireActivity().findViewById(R.id.nav_view)).getMenu();
@@ -56,9 +55,6 @@ public class HomeFragment extends Fragment {
 
         // Setup the join BE button
         btnJoinBE.setOnClickListener(v -> NavigationUI.onNavDestinationSelected(menu.findItem(R.id.nav_proxy), navController));
-
-        // Setup the join JE button
-        btnJoinJE.setOnClickListener(v -> NavigationUI.onNavDestinationSelected(menu.findItem(R.id.nav_geyser), navController));
 
         return root;
     }

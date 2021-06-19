@@ -27,8 +27,6 @@ package org.geysermc.geyser.android.utils;
 
 import android.text.Editable;
 
-import org.geysermc.geyser.android.ui.geyser.user_auths.AuthPreference;
-
 /**
  * This class is used to store various interfaces for event listeners
  */
@@ -54,17 +52,6 @@ public class EventListeners {
      */
     public interface StartedEventListener {
         void onStarted(boolean failed);
-    }
-
-    public interface UserAuthDialogListener {
-        void applyTexts(String xboxUsername, String javaUsername, String javaPassword, boolean microsoftAccount);
-    }
-
-    /**
-     * This is used for long presses on the {@link AuthPreference}
-     */
-    public interface OnHoldListener {
-        void onLongClick(AuthPreference preference);
     }
 
     /**

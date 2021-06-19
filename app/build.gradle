@@ -146,17 +146,6 @@ dependencies {
 //        classDelete "it.unimi.dsi.fastutil.floats.FloatIterator"
     }
 
-    // Core Geyser
-    implementation ('org.geysermc:connector:1.2.1-SNAPSHOT') {
-        exclude group: 'com.nukkitx.fastutil', module:'fastutil-common'
-        exclude group: 'com.github.CloudburstMC.Network', module:'common'
-        exclude group: 'com.github.CloudburstMC.Network', module:'raknet'
-        exclude group: 'io.netty', module:'netty-transport-native-epoll'
-        exclude group: 'io.netty', module:'netty-transport-native-kqueue'
-        exclude group: 'com.github.CloudburstMC.Protocol'
-        exclude group: 'com.nukkitx.protocol'
-    }
-
     // Load a remake of nnio to support earlier Android versions
     nnio 'com.github.rtm516:nnio:c7b291f4ca'
     implementation tasks.nnioJar.outputs.files

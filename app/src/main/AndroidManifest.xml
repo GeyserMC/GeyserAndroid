@@ -14,15 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.geyser.user_auths.UserAuthsActivity"
-            android:label="@string/user_auths_title" />
-        <activity
-            android:name=".ui.geyser.config_editor.ConfigEditorSimpleActivity"
-            android:label="@string/config_editor_simple_title" />
-        <activity
-            android:name=".ui.geyser.config_editor.ConfigEditorAdvancedActivity"
-            android:label="@string/config_editor_advanced_title" />
-        <activity
             android:name=".ui.about.AboutActivity"
             android:label="@string/action_about" />
         <activity
@@ -40,7 +31,6 @@
         </activity>
 
         <service android:name=".service.ProxyService" />
-        <service android:name=".service.GeyserService" />
     </application>
 
 </manifest>

@@ -36,7 +36,6 @@ import com.nukkitx.protocol.bedrock.v431.Bedrock_v431;
 
 import org.geysermc.geyser.android.R;
 import org.geysermc.geyser.android.utils.EventListeners;
-import org.geysermc.connector.GeyserConnector;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -94,12 +93,6 @@ public class ProxyServer {
         instance = this;
 
         proxyLogger = new ProxyLogger();
-
-        if (GeyserConnector.getInstance() != null && !GeyserConnector.getInstance().isShuttingDown()) {
-            proxyLogger.warning(ctx.getResources().getString(R.string.proxy_geyser_running_warn));
-            onDisable();
-            return;
-        }
 
         this.generalThreadPool = Executors.newScheduledThreadPool(32);
 

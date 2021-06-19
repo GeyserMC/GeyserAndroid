@@ -17,9 +17,4 @@
         android:label="@string/menu_proxy"
         tools:layout="@layout/fragment_proxy" />
 
-    <fragment
-        android:id="@+id/nav_geyser"
-        android:name="org.geysermc.geyser.android.ui.geyser.GeyserFragment"
-        android:label="@string/menu_geyser"
-        tools:layout="@layout/fragment_geyser" />
 </navigation>

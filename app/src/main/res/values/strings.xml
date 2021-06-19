@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Geyser Android</string>
     <string name="app_site" translatable="false">https://geysermc.org</string>
-    <string name="app_discord" translatable="false">https://discord.geysermc.org</string>
+    <string name="app_discord" translatable="false">https://discord.gg/geysermc</string>
 
     <string name="nav_header_title" translatable="false">Geyser Android</string>
     <string name="nav_header_subtitle" translatable="false">geysermc.org</string>
