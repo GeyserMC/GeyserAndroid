@@ -87,10 +87,12 @@ public class Player {
         startGamePacket.setDefaultSpawn(Vector3i.ZERO);
         startGamePacket.setAchievementsDisabled(true);
         startGamePacket.setCurrentTick(-1);
+
         startGamePacket.setEduEditionOffers(0);
         startGamePacket.setEduFeaturesEnabled(false);
         startGamePacket.setRainLevel(0);
         startGamePacket.setLightningLevel(0);
+
         startGamePacket.setMultiplayerGame(true);
         startGamePacket.setBroadcastingToLan(true);
         startGamePacket.getGamerules().add(new GameRuleData<>("showcoordinates", true));
@@ -110,20 +112,22 @@ public class Player {
         startGamePacket.setFromWorldTemplate(false);
         startGamePacket.setWorldTemplateOptionLocked(false);
 
-        startGamePacket.setLevelId("");
-        startGamePacket.setLevelName("LAN Proxy");
-        startGamePacket.setPremiumWorldTemplateId("");
-        startGamePacket.setCurrentTick(0);
-        startGamePacket.setEnchantmentSeed(0);
-        startGamePacket.setMultiplayerCorrelationId("");
-
+        startGamePacket.setAuthoritativeMovementMode(AuthoritativeMovementMode.CLIENT);
         SyncedPlayerMovementSettings settings = new SyncedPlayerMovementSettings();
         settings.setMovementMode(AuthoritativeMovementMode.CLIENT);
         settings.setRewindHistorySize(0);
         settings.setServerAuthoritativeBlockBreaking(false);
         startGamePacket.setPlayerMovementSettings(settings);
+        startGamePacket.setVanillaVersion("1.17.40");
 
-        startGamePacket.setVanillaVersion("*");
+        startGamePacket.setLevelId("world");
+        startGamePacket.setLevelName("world");
+        startGamePacket.setPremiumWorldTemplateId("00000000-0000-0000-0000-000000000000");
+        startGamePacket.setCurrentTick(0);
+        startGamePacket.setEnchantmentSeed(0);
+        startGamePacket.setMultiplayerCorrelationId("");
+        startGamePacket.setServerEngine("");
+
         session.sendPacket(startGamePacket);
 
         // Send an empty chunk
